@@ -319,3 +319,6 @@ p,.prose{orphans:2;widows:2;text-align:justify;text-justify:inter-word;hyphens:a
 .prose li{margin-block:4px}
 /* برش یکنواخت متن کارت‌ها (سرخط تا ۴ خط) */
 .ncard-x{-webkit-line-clamp:4}
+/* فوتر: تیتر ستون‌ها و لینک‌ها وسط‌چین */
+.foot h4{text-align:center}
+.foot .flnk{display:block;text-align:center}
