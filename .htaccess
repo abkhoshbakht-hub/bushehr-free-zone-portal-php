@@ -1,0 +1,7 @@
+Options -Indexes
+DirectoryIndex index.php
+# جلوگیری از دسترسی مستقیم به ماژول‌های داخلی
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule ^(config\.php|app\.php)$ - [F]
+</IfModule>

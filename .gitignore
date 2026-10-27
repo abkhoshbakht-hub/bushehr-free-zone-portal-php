@@ -1,0 +1,4 @@
+﻿run-out.txt
+run-err.txt
+*.log
+*.bak
