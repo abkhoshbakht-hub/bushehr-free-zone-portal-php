@@ -161,7 +161,7 @@ function page_header(string $pTitle = ''): void {
 <title>' . e(($pTitle ? $pTitle . ' — ' : '') . $site . ' | ' . $sub) . '</title>
 <meta name="description" content="' . e(setting('about_' . $lang, t('footer_desc'))) . '">
 <link rel="icon" href="assets/img/brand/bushehr-free-zone-logo.jpg">
-<link rel="stylesheet" href="assets/css/main.css?v=3">
+<link rel="stylesheet" href="assets/css/main.css?v=5">
 <script>try{var m=localStorage.getItem("theme")||"auto";if(m==="dark"||(m==="auto"&&matchMedia("(prefers-color-scheme:dark)").matches))document.documentElement.dataset.theme="dark"}catch(e){}</script>
 </head><body>
 <div class="u-strip"><div class="wrap">
@@ -220,7 +220,9 @@ function page_footer(): void {
     <span dir="ltr">' . e(setting('phone', '')) . '</span>
     <span dir="ltr">' . e(setting('email', '')) . '</span></div>
 </div>
-<div class="foot-b"><span>© ' . e(num_i18n((int)date('Y'))) . ' ' . e($site) . '</span></div></div>
+<div class="foot-b"><span>© ' . e(num_i18n((int)date('Y'))) . ' ' . e($site) . '</span>
+  <span class="credit"><img src="assets/img/brand/liandesign-logo.png" alt="Lian Design" width="28" height="26" loading="lazy">' . e(tl('طراحی و توسعه: لیان دیزاین', 'Design & Development: Lian Design', 'التصميم والتطوير: ليان ديزاين')) . '</span>
+  <button class="totop" type="button" onclick="window.scrollTo({top:0,behavior:\'smooth\'})">↑ ' . e(tl('بازگشت به بالا', 'Back to top', 'العودة إلى الأعلى')) . '</button></div></div>
 </footer>
 <script src="assets/js/main.js?v=2" defer></script>
 </body></html>';

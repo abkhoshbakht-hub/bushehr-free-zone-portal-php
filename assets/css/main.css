@@ -262,7 +262,12 @@ img{max-width:100%;display:block}
 .foot p,.foot span{display:block;font-size:12.5px;opacity:.78;line-height:2.1}
 .foot a.flnk{display:block;font-size:12.5px;opacity:.82;padding:3px 0}
 .foot a.flnk:hover{opacity:1;color:var(--orange)}
-.foot-b{border-top:1px solid rgba(255,255,255,.12);padding-block:15px;font-size:11.5px;opacity:.75;text-align:center}
+.foot-b{border-top:1px solid rgba(255,255,255,.12);padding-block:15px;font-size:11.5px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.credit{display:inline-flex;align-items:center;gap:7px;color:#93a3ba;white-space:nowrap}
+.credit img{height:26px;width:auto;object-fit:contain}
+.totop{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:#e6edf7;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:9px;padding:6px 11px;cursor:pointer;white-space:nowrap}
+.totop:hover{background:rgba(255,255,255,.14)}
+@media (max-width:640px){.foot-b{justify-content:center;text-align:center}}
 
 /* ریسپانسیو */
 @media (max-width:1020px){
@@ -289,3 +294,28 @@ img{max-width:100%;display:block}
   .fgrid{grid-template-columns:1fr;gap:22px}
   .hero-t{font-size:20px}
 }
+
+/* ================= ویراستاری حرفه‌ای پورتال خبری ================= */
+html{scroll-behavior:smooth;scroll-padding-top:104px}
+::selection{background:var(--orange);color:#241300}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
+img{max-width:100%;height:auto}
+h1,h2,h3,h4{text-wrap:balance}
+b,strong{font-weight:700}
+p,.prose{orphans:2;widows:2;text-align:justify;text-justify:inter-word;hyphens:auto;overflow-wrap:break-word}
+/* وسط‌چین تیترها، عناوین بخش‌ها و بلوک‌های آماری */
+.shead{flex-direction:column;gap:8px;justify-content:center;text-align:center}
+.stitle{justify-content:center}
+.pgtitle{text-align:center}
+.pgtitle::after{content:'';display:block;width:64px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--orange),var(--blue));margin:12px auto 0}
+.art-t{text-align:center}
+.art-meta{justify-content:center}
+.edate{margin-inline:auto}
+.pulse .pi{text-align:center}
+.psub{justify-content:center}
+/* ستون خوانش مقاله: عرض بهینه + وسط‌چین */
+.prose{line-height:2.1;max-width:78ch;margin-inline:auto}
+.prose ul{padding-inline-start:22px;margin-block:10px}
+.prose li{margin-block:4px}
+/* برش یکنواخت متن کارت‌ها (سرخط تا ۴ خط) */
+.ncard-x{-webkit-line-clamp:4}
