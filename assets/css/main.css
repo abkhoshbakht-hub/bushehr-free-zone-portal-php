@@ -322,3 +322,8 @@ p,.prose{orphans:2;widows:2;text-align:justify;text-justify:inter-word;hyphens:a
 /* فوتر: تیتر ستون‌ها و لینک‌ها وسط‌چین */
 .foot h4{text-align:center}
 .foot .flnk{display:block;text-align:center}
+/* درخواست: تمام تیتر/برچسب/تاریخ کارت‌ها هم وسط‌چین — متن پاراگراف‌ها جاستیفای می‌ماند */
+.ncard-bd,.acard-bd,.ebd,.mbd,.irow-bd,.hc-bd{text-align:center}
+.ncard-cat{align-self:center}
+.ncard-meta{justify-content:center}
+.acard-meta,.emeta{justify-content:center}
