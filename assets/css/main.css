@@ -435,3 +435,43 @@ html{scroll-padding-top:172px}
   .hdr-row2{gap:8px;flex-wrap:wrap}
   .qsearch{min-width:0}
 }
+
+/* ================= v12: گرافیک حرفه‌ای منو + کنترل‌های وسط‌چین ================= */
+/* --- منوی اصلی: وسط‌چین، پیل نرم، اکتیو شیک --- */
+.mainnav{justify-content:center;gap:3px;padding-block:3px}
+.nav-link{padding:9px 13px;font-size:13.5px;font-weight:700;color:var(--ink);opacity:.86;border-radius:11px;transition:all .18s ease}
+.nav-link:hover{opacity:1;background:var(--accent-soft);color:var(--blue)}
+.nav-link.on{opacity:1;background:var(--accent-soft);color:var(--blue)}
+.nav-link.on::after{inset-inline:15px;bottom:1px;height:3px;border-radius:3px 3px 0 0;background:var(--orange)}
+/* --- فلش دراپ‌داون: چورون SVG با چرخش هنگام باز شدن --- */
+.dd-caret{display:inline-flex;align-items:center;margin-inline-start:6px;opacity:.55;transition:transform .2s ease}
+.has-sub:hover .dd-caret,.has-sub:has(.subnav.open) .dd-caret{transform:rotate(180deg);opacity:.9}
+/* --- کارت زیرمنو: سایه نرم‌تر، آیتم‌های با توضیح --- */
+.subnav{min-width:302px;border-radius:16px;box-shadow:0 22px 48px rgba(2,20,60,.18);padding:12px;gap:3px}
+.subnav a{padding:10px 12px;border-radius:11px;transition:all .16s ease}
+.subnav a b{font-size:13.5px;display:block}
+.subnav a:hover{transform:translateY(-1px)}
+/* --- ردیف دوم: وسط‌چین و قرصی --- */
+.hdr-row2{justify-content:center;gap:12px}
+.qsearch{flex:0 1 430px;min-width:230px;border-radius:999px;padding:1px;transition:border-color .2s,box-shadow .2s}
+.qsearch:hover{border-color:var(--blue)}
+.qsearch button{padding:0 13px;font-size:14.5px}
+.qin{padding:9px 16px;font-size:13px}
+.langsw{border-radius:999px;overflow:hidden;box-shadow:var(--sh)}
+.icon-btn{border-radius:999px;padding:8px 12px}
+@media (max-width:1020px){
+  .qsearch{flex:1 1 auto}
+}
+@media (max-width:640px){
+  .hdr-row2{gap:8px}
+  .qsearch{flex:1 1 100%}
+  .subnav{min-width:0}
+}
+
+/* ================= v13: محافظ عرض منوی زبان — عربی هرگز بریده نشود ================= */
+.langsw{flex-shrink:0;min-width:190px;max-width:none}
+.lang-b{white-space:nowrap;flex:none;flex-shrink:0}
+.icon-btn{flex-shrink:0}
+
+/* ================= v14: سوییچر زبان = عرض طبیعی محتوا، بدون فضای خالی و بدون برش ================= */
+.langsw{flex-shrink:0;min-width:0}

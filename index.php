@@ -157,7 +157,7 @@ function page_header(string $pTitle = ''): void {
 <title>' . e(($pTitle ? $pTitle . ' — ' : '') . $site . ' | ' . $sub) . '</title>
 <meta name="description" content="' . e(setting('about_' . $lang, t('footer_desc'))) . '">
 <link rel="icon" href="assets/img/brand/bushehr-free-zone-logo.jpg">
-<link rel="stylesheet" href="assets/css/main.css?v=11">
+<link rel="stylesheet" href="assets/css/main.css?v=14">
 <script>try{var m=localStorage.getItem("theme")||"auto";if(m==="dark"||(m==="auto"&&matchMedia("(prefers-color-scheme:dark)").matches))document.documentElement.dataset.theme="dark"}catch(e){}</script>
 </head><body>
 <div class="u-strip"><div class="wrap">
@@ -181,7 +181,7 @@ function page_header(string $pTitle = ''): void {
     /* dropdown: چند رسانه‌ای */
     $mcOn = $pageNow === 'media';
     echo '<div class="nav-li has-sub' . ($mcOn ? ' active' : '') . '">
-        <button type="button" class="nav-link dd-toggle' . ($mcOn ? ' on' : '') . '">' . e(t('multimedia')) . '<span class="dd-caret">▾</span></button>
+        <button type="button" class="nav-link dd-toggle' . ($mcOn ? ' on' : '') . '">' . e(t('multimedia')) . '<span class="dd-caret"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span></button>
         <div class="subnav">
           <a href="' . e(url('media')) . '"><b>' . e(t('media')) . '</b><small>' . e(tl('همه آثار', 'All items', 'كل الأعمال')) . '</small></a>
           <a href="' . e(url('media', ['mc' => 'photo'])) . '">' . e(t('photos')) . '<small>' . e(t('mc_photo')) . '</small></a>
@@ -189,11 +189,11 @@ function page_header(string $pTitle = ''): void {
         </div></div>';
     /* dropdown: دسترسی سریع */
     echo '<div class="nav-li has-sub">
-        <button type="button" class="nav-link dd-toggle">' . e(t('quick_links')) . '<span class="dd-caret">▾</span></button>
+        <button type="button" class="nav-link dd-toggle">' . e(t('quick_links')) . '<span class="dd-caret"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span></button>
         <div class="subnav">
-          <a href="https://my.freezones.ir" target="_blank" rel="noopener">' . e(t('services_portal')) . '</a>
-          <a href="https://www.freezones.ir" target="_blank" rel="noopener">' . e(t('sec_portal')) . '</a>
-          <a href="mailto:' . e(setting('email', 'info@bushehrfz.ir')) . '">' . e(t('zr_suggest')) . '</a>
+          <a href="https://my.freezones.ir" target="_blank" rel="noopener"><b>' . e(t('services_portal')) . '</b><small>' . e(tl('خدمات الکترونیک و ثبت‌نام', 'e-services &amp; registration', 'الخدمات الإلكترونية والتسجيل')) . '</small></a>
+          <a href="https://www.freezones.ir" target="_blank" rel="noopener"><b>' . e(t('sec_portal')) . '</b><small>' . e(tl('قوانین، نشریات و اطلاعیه‌ها', 'rules, bulletins &amp; notices', 'القوانين والنشرات والإعلانات')) . '</small></a>
+          <a href="mailto:' . e(setting('email', 'info@bushehrfz.ir')) . '"><b>' . e(t('zr_suggest')) . '</b><small>' . e(tl('ارتباط مستقیم با دبیرخانه', 'direct contact with the secretariat', 'التواصل المباشر مع الأمانة')) . '</small></a>
         </div></div>';
     echo '</nav>
   </div>
@@ -299,34 +299,6 @@ case 'home': {
     }
     echo '</div></section>';
 
-    /* پالس */
-    $pulse = qall("SELECT m.*, COALESCE(t1.label, tf.label) AS label, COALESCE(t1.value, tf.value) AS value,
-                          COALESCE(t1.note, tf.note) AS note,
-                          COALESCE(t1.change_text, tf.change_text) AS change_text,
-                          COALESCE(t1.submetrics, tf.submetrics) AS submetrics
-                   FROM pulse_metrics m
-                   LEFT JOIN pulse_metric_translations t1 ON t1.metric_id = m.id AND t1.lang = ?
-                   LEFT JOIN pulse_metric_translations tf ON tf.metric_id = m.id AND tf.lang = 'fa'
-                   WHERE m.is_active = 1 ORDER BY m.sort_order, m.id", [$lang]);
-    if ($pulse) {
-        echo '<section class="sec">' . section_head(tl('پالس منطقه آزاد', 'Free Zone Pulse', 'نبض المنطقة الحرة'), url('investments'))
-           . '<div class="pulse">';
-        foreach ($pulse as $m) {
-            $subs = [];
-            foreach ((array)json_decode((string)($m['submetrics'] ?? ''), true) as $r) {
-                if (!is_array($r) || !isset($r[0])) continue;
-                $sv = (string)($r[1] ?? '');
-                $subs[] = '<span>' . e((string)$r[0]) . ($sv !== '' ? ' <b>' . e(num_i18n($sv)) . '</b>' : '') . '</span>';
-            }
-            $val = num_i18n((string)$m['value']);
-            echo '<div class="pi"><div class="pi-v">' . e($val) . '</div><div class="pi-l">' . e($m['label']) . '</div>
-                  <span class="pchg ' . e((string)$m['trend']) . '">' . e((string)($m['change_text'] ?? '')) . '</span>
-                  <div class="psub">' . implode('', $subs) . '</div>
-                  <div class="pi-n"><p class="pi-note">' . e((string)($m['note'] ?? '')) . '</p></div></div>';
-        }
-        echo '</div></section>';
-    }
-
     /* آخرین اخبار */
     $latest = articles_query('', [], 6, 0, false, 'a.published_at DESC, a.id DESC');
     echo '<section class="sec">' . section_head(t('latest_news'), url('news'))
@@ -428,6 +400,34 @@ case 'article': {
 case 'announcements': {
     page_header(t('merged_ann'));
     echo '<h1 class="pgtitle">' . e(t('merged_ann')) . '</h1>';
+    /* پالس منطقه آزاد */
+    $pulse = qall("SELECT m.*, COALESCE(t1.label, tf.label) AS label, COALESCE(t1.value, tf.value) AS value,
+                          COALESCE(t1.note, tf.note) AS note,
+                          COALESCE(t1.change_text, tf.change_text) AS change_text,
+                          COALESCE(t1.submetrics, tf.submetrics) AS submetrics
+                   FROM pulse_metrics m
+                   LEFT JOIN pulse_metric_translations t1 ON t1.metric_id = m.id AND t1.lang = ?
+                   LEFT JOIN pulse_metric_translations tf ON tf.metric_id = m.id AND tf.lang = 'fa'
+                   WHERE m.is_active = 1 ORDER BY m.sort_order, m.id", [$lang]);
+    if ($pulse) {
+        echo '<section class="sec">' . section_head(tl('پالس منطقه آزاد', 'Free Zone Pulse', 'نبض المنطقة الحرة'))
+           . '<div class="pulse">';
+        foreach ($pulse as $m) {
+            $subs = [];
+            foreach ((array)json_decode((string)($m['submetrics'] ?? ''), true) as $r) {
+                if (!is_array($r) || !isset($r[0])) continue;
+                $sv = (string)($r[1] ?? '');
+                $subs[] = '<span>' . e((string)$r[0]) . ($sv !== '' ? ' <b>' . e(num_i18n($sv)) . '</b>' : '') . '</span>';
+            }
+            $val = num_i18n((string)$m['value']);
+            echo '<div class="pi"><div class="pi-v">' . e($val) . '</div><div class="pi-l">' . e($m['label']) . '</div>
+                  <span class="pchg ' . e((string)$m['trend']) . '">' . e((string)($m['change_text'] ?? '')) . '</span>
+                  <div class="psub">' . implode('', $subs) . '</div>
+                  <div class="pi-n"><p class="pi-note">' . e((string)($m['note'] ?? '')) . '</p></div></div>';
+        }
+        echo '</div></section>';
+    }
+
     /* بخش اول: فرصت‌های سرمایه‌گذاری */
     $ivs = x_list('investments', 'investment_translations', 'investment_id', 'created_at DESC', true, ['title', 'summary', 'description', 'category', 'volume', 'irr', 'payback', 'location', 'incentives']);
     echo '<h2 class="sect-t">' . e(t('investments')) . '</h2><div class="igrid" style="grid-template-columns:1fr">';
