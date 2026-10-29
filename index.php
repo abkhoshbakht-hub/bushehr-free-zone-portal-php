@@ -157,7 +157,7 @@ function page_header(string $pTitle = ''): void {
 <title>' . e(($pTitle ? $pTitle . ' — ' : '') . $site . ' | ' . $sub) . '</title>
 <meta name="description" content="' . e(setting('about_' . $lang, t('footer_desc'))) . '">
 <link rel="icon" href="assets/img/brand/bushehr-free-zone-logo.jpg">
-<link rel="stylesheet" href="assets/css/main.css?v=8">
+<link rel="stylesheet" href="assets/css/main.css?v=9">
 <script>try{var m=localStorage.getItem("theme")||"auto";if(m==="dark"||(m==="auto"&&matchMedia("(prefers-color-scheme:dark)").matches))document.documentElement.dataset.theme="dark"}catch(e){}</script>
 </head><body>
 <div class="u-strip"><div class="wrap">
@@ -200,12 +200,6 @@ function page_header(string $pTitle = ''): void {
           <a href="mailto:' . e(setting('email', 'info@bushehrfz.ir')) . '">' . e(t('zr_suggest')) . '</a>
         </div></div>';
     echo '</nav>
-  <div class="socials" aria-label="social">
-    <a href="https://instagram.com/freena.ir" target="_blank" rel="noopener" title="Instagram"><svg viewBox="0 0 19 20" width="17" height="18" fill="currentColor" aria-hidden="true"><path d="M19 5.83V14.17a5.46 5.46 0 0 1-5.46 5.46H5.54a5.46 5.46 0 0 1-5.54-5.46V5.83A5.46 5.46 0 0 1 5.54 .04h8a5.46 5.46 0 0 1 5.46 5.79ZM17.42 5.83a3.51 3.51 0 0 0-3.52-3.5H5.54A3.51 3.51 0 0 0 2 5.83v8.28a3.51 3.51 0 0 0 3.54 3.5h8a3.51 3.51 0 0 0 3.52-3.54V5.83Zm-3.57 4.19a4.5 4.5 0 0 1-4.35 4.58A4.4 4.4 0 0 1 5.15 10a4.4 4.4 0 0 1 4.35-4.42 4.35 4.35 0 0 1 4.35 4.42ZM12.27 10a2.25 2.25 0 0 1-2.27 2.34A2.25 2.25 0 0 1 7.73 10a2.25 2.25 0 0 1 4.54 -.02Zm3.56-5.42a1.25 1.25 0 1 1-1.25-1.24 1.25 1.25 0 0 1 1.25 1.24Z"/></svg></a>
-    <a href="https://t.me/iranfreezones" target="_blank" rel="noopener" title="Telegram"><img src="assets/img/social/telegram-plane.svg" width="17" height="17" alt=""></a>
-    <a href="https://ble.ir/iranfreezones_ir" target="_blank" rel="noopener" title="Bale"><img src="assets/img/social/baleh.svg" width="17" height="17" alt=""></a>
-    <a href="http://eitaa.com/iranfreezones_ir" target="_blank" rel="noopener" title="Eitaa"><svg viewBox="0 0 20 21" width="16" height="17" fill="currentColor" aria-hidden="true"><path d="M10.49 20.54a5.68 5.68 0 0 1-4.76-4.51c-.13-.62-.146-1.39-.13-6.18.016-5.16 -.002-4.89.25-5.74a6.89 6.89 0 0 1 3.51-4.04A5.87 5.87 0 0 1 15.64 0c5.36 .03 5.19 -.01 6.06 .27a5.84 5.84 0 0 1 3.7 3.59c.28 .8 .3 .93 .317 3.05l.017 1.91-.335 .23a13.69 13.69 0 0 0-2.3 2.45 32.4 32.4 0 0 1-2.56 2.49 7.07 7.07 0 0 1-3.2 1.6 5.62 5.62 0 0 1-1.98-.08c-.47-.12-.44-.14-.62.4a5.45 5.45 0 0 0-.27 1.33l-.028.35-.125-.026a3.59 3.59 0 0 1-2.48-2.15 3.07 3.07 0 0 1-.22-1.04l-.014-.3-.265-.24Z" transform="translate(.001 -.2)"/></svg></a>
-  </div>
   <div class="top-actions">
     <form class="qsearch" action="index.php" method="get" role="search">
       <input type="hidden" name="p" value="search"><input type="hidden" name="lang" value="' . e($lang) . '">
@@ -235,7 +229,16 @@ function page_footer(): void {
 <footer class="foot"><div class="wrap"><div class="fgrid">
   <div><div class="fbrand"><span class="flogo"><img src="assets/img/brand/bushehr-free-zone-logo.jpg" alt=""></span>
      <span><b>' . e($site) . '</b><small>' . e(tl('منطقه آزاد تجاری–صنعتی بوشهر', 'Bushehr Free Trade Zone', 'المنطقة الحرة بوشهر')) . '</small></span></div>
-    <p>' . e(t('footer_desc')) . '</p></div>
+    <p>' . e(t('footer_desc')) . '</p>
+    <div class="fsoc">
+      <span class="fsoc-t">' . e(tl('ما را دنبال کنید', 'Follow us', 'تابعونا')) . '</span>
+      <div class="fsoc-row">
+        <a class="fs fs-ig" href="https://instagram.com/freena.ir" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram"><svg width="19" height="20" viewBox="0 0 19 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 5.83359V14.167C18.9964 17.3876 16.5174 19.9969 13.4588 20H5.54241C2.48322 19.9975 0.00296894 17.3876 0 14.1677V5.83484C0.00296894 2.61362 2.48262 0.00250047 5.54241 0H13.4588C16.5174 0.00437582 18.9958 2.61362 18.9994 5.83359V5.83422L19 5.83359ZM17.4158 5.83359C17.4134 3.53316 15.6433 1.66906 13.4588 1.66594H5.54241C3.35668 1.66844 1.58541 3.53316 1.58363 5.83422V14.1683C1.5866 16.4681 3.35727 18.3322 5.54181 18.3347H13.4582C15.6427 18.3316 17.4128 16.4681 17.4158 14.1689V5.83359ZM13.8536 9.99938C13.8507 12.5292 11.9031 14.5796 9.50059 14.5827C7.09754 14.5796 5.14991 12.5292 5.14695 10C5.14991 7.47015 7.09754 5.41977 9.5 5.41664C11.9031 5.41977 13.8507 7.47015 13.8536 9.99938ZM12.27 9.99938C12.2682 8.3897 11.029 7.08445 9.5 7.08258C7.971 7.08445 6.73117 8.38907 6.72939 9.99875C6.73058 11.6091 7.96981 12.9143 9.49941 12.9162C11.029 12.9143 12.2688 11.6091 12.27 9.99875V9.99938ZM15.8327 4.58273C15.8327 5.27286 15.3001 5.83359 14.6458 5.83359C14.0104 5.80484 13.5063 5.25599 13.5063 4.58273C13.5063 3.90948 14.011 3.36063 14.6434 3.33187H14.6458C15.3001 3.33187 15.8327 3.89386 15.8327 4.58273V4.58273Z" fill="white"></path></svg></a>
+        <a class="fs fs-tg" href="https://t.me/iranfreezones" target="_blank" rel="noopener" title="Telegram" aria-label="Telegram"><img src="assets/img/social/telegram-plane.svg" width="19" height="19" alt="Telegram"></a>
+        <a class="fs fs-bl" href="https://ble.ir/iranfreezones_ir" target="_blank" rel="noopener" title="Bale" aria-label="Bale"><img src="assets/img/social/baleh.svg" width="19" height="19" alt="Bale"></a>
+        <a class="fs fs-et" href="http://eitaa.com/iranfreezones_ir" target="_blank" rel="noopener" title="Eitaa" aria-label="Eitaa"><svg xmlns="http://www.w3.org/2000/svg" width="20.144" height="20.594" viewBox="0 0 20.144 20.594"><path d="M10.494,20.543a5.684,5.684,0,0,1-2-.712,5.85,5.85,0,0,1-2.76-3.8c-.13-.615-.146-1.393-.129-6.184.016-5.156,0-4.89.25-5.74A6.886,6.886,0,0,1,6.56,2.593,5.865,5.865,0,0,1,10.447.068,50.9,50.9,0,0,1,15.644,0c5.364,0,5.187-.008,6.063.269a5.841,5.841,0,0,1,3.7,3.59c.283.8.3.933.317,3.05l.017,1.913-.335.23A13.685,13.685,0,0,0,23.419,10.9a32.432,32.432,0,0,1-2.559,2.494,7.073,7.073,0,0,1-3.2,1.6,5.618,5.618,0,0,1-1.975-.082c-.475-.124-.444-.144-.623.4a5.453,5.453,0,0,0-.273,1.327l-.027.349-.125-.026a3.592,3.592,0,0,1-2.475-2.145,3.074,3.074,0,0,1-.223-1.046l-.014-.292-.265-.244a3.186,3.186,0,0,1-1.025-1.768,3.808,3.808,0,0,1,1.32-3.223,8.784,8.784,0,0,1,4.25-2.3,6.934,6.934,0,0,1,2.062-.064,3.346,3.346,0,0,1,2.27,1.406c.156.233.167.266.152.476a.7.7,0,0,1-.157.423,5.354,5.354,0,0,1-2.863,1.442c-2.252.5-3.685-.122-3.461-1.509a1.242,1.242,0,0,0,.027-.269c-.027-.027-.251.089-.493.257a2.486,2.486,0,0,0-.9,1.379,2.131,2.131,0,0,0-.029.558,1.318,1.318,0,0,0,.165.632,2.438,2.438,0,0,0,.35.505l.206.215-.082.1a4.157,4.157,0,0,0-.581,1.044,3.119,3.119,0,0,0-.09,1.557,3.372,3.372,0,0,0,.634,1.26,3.272,3.272,0,0,0,.76.656c.021,0,.038-.041.038-.091a4.955,4.955,0,0,1,.28-1.139,4.862,4.862,0,0,1,2.42-2.351c.21-.112.817-.4,1.349-.65a15.529,15.529,0,0,0,2.155-1.12,4.489,4.489,0,0,0,1.836-3.11,8.126,8.126,0,0,0,0-1.894,4.381,4.381,0,0,0-4.134-3.75c-2.51-.263-5.7,1.676-7.673,4.657a12.256,12.256,0,0,0-1.877,4.67,11.026,11.026,0,0,0-.08,2.36,5.762,5.762,0,0,0,1.633,3.566,5.6,5.6,0,0,0,1.6,1.127,7.234,7.234,0,0,0,6.26.061,9.3,9.3,0,0,0,2.594-1.931,29.354,29.354,0,0,0,3.082-3.825,10.418,10.418,0,0,1,1.95-2.235l.129-.074-.016,2.652a15.275,15.275,0,0,1-.106,3.056,5.808,5.808,0,0,1-4.458,4.5l-.4.092-4.955.009c-4.062.007-5.02,0-5.311-.048Z" transform="translate(-5.599 0.001)" fill="#fff"></path></svg></a>
+      </div>
+    </div></div>
   <div><h4>' . e(t('quick_links')) . '</h4>
     <a class="flnk" href="' . e(url('news')) . '">' . e(t('news')) . '</a>
     <a class="flnk" href="' . e(url('announcements')) . '">' . e(t('merged_ann')) . '</a>

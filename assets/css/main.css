@@ -340,12 +340,7 @@ p,.prose{orphans:2;widows:2;text-align:justify;text-justify:inter-word;hyphens:a
 .subnav a small{display:block;font-size:11.5px;opacity:.7;font-weight:400;white-space:normal}
 .subnav a:hover,.subnav a:focus-visible{background:var(--hover);color:var(--blue)}
 .subnav a:hover b{color:var(--blue)}
-/* --- شبکه‌های اجتماعی هدر --- */
-.socials{display:flex;align-items:center;gap:5px;padding-inline-start:10px;border-inline-start:1px solid var(--hairline)}
-.socials a{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;color:var(--muted);background:var(--veil);border:1px solid var(--hairline)}
-.socials a:hover{color:var(--blue);background:var(--accent-soft);border-color:var(--accent-soft)}
-.socials svg,.socials img{display:block}
-/* --- عنوان بخش‌های صفحه ترکیبی --- */
+/* --- تیتربخش‌های صفحه ترکیبی --- */
 .sect-t{font-size:17.5px;font-weight:800;color:var(--ink);margin:24px 0 14px;display:flex;align-items:center;gap:9px;text-align:center;justify-content:center}
 .sect-t::before{content:"";width:6px;height:20px;border-radius:4px;background:linear-gradient(180deg,var(--orange),var(--blue));flex-shrink:0}
 /* --- درباره ما / تماس با ما --- */
@@ -360,9 +355,48 @@ p,.prose{orphans:2;widows:2;text-align:justify;text-justify:inter-word;hyphens:a
   .subnav{position:static;box-shadow:none;border:0;background:transparent;padding:0 12px 4px;min-width:0;width:100%}
   .has-sub:hover .subnav,.has-sub:focus-within .subnav{display:none}
   .subnav.open{display:flex}
-  .socials{display:none}
 }
 @media (max-width:640px){
   .cgrid{grid-template-columns:1fr}
   .fgrid{grid-template-columns:1fr;gap:26px}
+}
+
+/* ================= v9: شبکه‌های اجتماعی فوتر (آیکون سفید روی رنگ برند) ================= */
+.fsoc{margin-top:16px}
+.fsoc-t{display:block;font-size:12px;color:var(--muted);font-weight:700;margin-bottom:10px;text-align:center}
+.fsoc-row{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
+.fs{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:13px;flex-shrink:0;transition:.2s}
+.fs svg,.fs img{display:block}
+.fs-ig{background:radial-gradient(circle at 30% 107%,#fdf497 0%,#fd5949 45%,#d6249f 60%,#285AEB 90%)}
+.fs-tg{background:#229ED9}
+.fs-bl{background:#00b894}
+.fs-et{background:#ff7634}
+.fs:hover{transform:translateY(-3px);box-shadow:0 8px 18px rgba(2,20,60,.18)}
+
+/* ================= v9: هدر فشرده — فیت دقیق داخل کادر ۱۱۸۰ ================= */
+.hdr-in{gap:9px;min-height:74px;padding-block:5px}
+.hdr-logo{width:52px;height:52px;border-radius:12px}
+.hdr-bt{max-width:165px;gap:8px}
+.hdr-bt b{font-size:15px}
+.hdr-bt small{font-size:10px}
+.mainnav{gap:0;justify-content:center;min-width:0;flex-shrink:1}
+.nav-link{padding:8px 6.5px;font-size:11.5px;border-radius:8px}
+.nav-link.on::after{inset-inline:7px}
+.top-actions{gap:7px}
+.qsearch{flex:1 1 115px;min-width:115px;max-width:170px}
+.qin{width:100%;min-width:0;padding:8px 11px}
+.qsearch button{padding:0 9px}
+.lang-b{padding:6px 8px;font-size:11px}
+.icon-btn{padding:7px 9px}
+
+/* v9b: پنجره‌های باریک‌تر دسکتاپ */
+@media (min-width:1021px) and (max-width:1330px){
+  .hdr-bt{max-width:130px}
+  .hdr-bt b{font-size:14px}
+  .nav-link{padding:8px 5.5px;font-size:11px}
+  .qsearch{min-width:100px;max-width:150px;flex-basis:110px}
+  .qin{padding:7px 10px}
+}
+@media (min-width:1021px) and (max-width:1090px){
+  .qsearch{display:none}
 }
