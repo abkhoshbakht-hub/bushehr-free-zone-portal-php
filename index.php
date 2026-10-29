@@ -245,7 +245,7 @@ case 'home': {
     page_header();
     $hero = articles_query('a.is_pinned = 1', [], 1, 0)[0] ?? null;
     if (!$hero) $hero = articles_query('', [], 1, 0)[0] ?? null;
-    $sec = $hero ? articles_query('a.id != ' . (int)$hero['id'], [], 3, 0) : [];
+    $sec = $hero ? articles_query('a.id != ' . (int)$hero['id'], [], 3, 0, false, 'a.published_at DESC, a.id DESC') : [];
 
     echo '<section class="hero"><div class="hero-grid">';
     if ($hero) {
@@ -296,7 +296,7 @@ case 'home': {
     }
 
     /* آخرین اخبار */
-    $latest = articles_query('', [], 6, 0);
+    $latest = articles_query('', [], 6, 0, false, 'a.published_at DESC, a.id DESC');
     echo '<section class="sec">' . section_head(t('latest_news'), url('news'))
        . '<div class="ngrid">' . implode('', array_map(fn($a) => news_card($a), $latest)) . '</div></section>';
 
@@ -340,7 +340,7 @@ case 'news': {
     if ($cid) { foreach (cat_names() as $id2 => $nm) if ($id2 === $cid && $nm !== '') $ttl = $nm; $where[] = 'a.category_id = ' . $cid; }
     $page = max(1, ini('page', 1)); $per = app()['per_page']; $off = ($page - 1) * $per;
     [$total] = articles_query($where ? implode(' AND ', $where) : '', [], 0, 0, true);
-    $rows = articles_query($where ? implode(' AND ', $where) : '', [], $per, $off);
+    $rows = articles_query($where ? implode(' AND ', $where) : '', [], $per, $off, false, 'a.published_at DESC, a.id DESC');
     page_header($ttl);
     echo '<h1 class="pgtitle">' . e($ttl) . '</h1>
     <div class="filters"><a class="chip' . ($cid ? '' : ' on') . '" href="' . e(url('news')) . '">' . e(t('all_categories')) . '</a>';

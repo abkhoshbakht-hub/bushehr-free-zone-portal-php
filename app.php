@@ -271,12 +271,12 @@ function art_fields(): string {
     return "COALESCE(tl.title, tf.title) AS title, COALESCE(tl.excerpt, tf.excerpt) AS excerpt, COALESCE(tl.body, tf.body) AS body";
 }
 
-function articles_query(string $where, array $p, int $limit = 0, int $off = 0, bool $count = false): array {
+function articles_query(string $where, array $p, int $limit = 0, int $off = 0, bool $count = false, string $order = ''): array {
     $w = " WHERE a.is_published = 1" . ($where !== '' ? " AND $where" : '');
     if ($count) return [qval("SELECT COUNT(*) FROM articles a" . art_join('a') . $w, $p)];
     $sql = "SELECT a.*, " . art_fields() . ", c.slug AS cslug FROM articles a
             LEFT JOIN categories c ON c.id = a.category_id" . art_join('a') . $w .
-           " ORDER BY a.is_pinned DESC, a.published_at DESC, a.id DESC" .
+           " ORDER BY " . ($order !== '' ? $order : 'a.is_pinned DESC, a.published_at DESC, a.id DESC') .
            ($limit ? " LIMIT $limit OFFSET $off" : '');
     return qall($sql, $p);
 }
