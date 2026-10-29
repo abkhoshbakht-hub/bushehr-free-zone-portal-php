@@ -136,10 +136,6 @@ function page_header(string $pTitle = ''): void {
     $lang = lang();
     $site = site_name();
     $sub  = tl('منطقه آزاد تجاری–صنعتی بوشهر', 'Bushehr Free Trade Zone', 'المنطقة الحرة بوشهر');
-    $nav = [
-        'home' => t('home'), 'news' => t('news'), 'announcements' => t('announcements'),
-        'events' => t('events'), 'media' => t('media'), 'investments' => t('investments'),
-    ];
     $today = date('Y-m-d');
     $portalDate = date_i18n($today, false);
     if ($lang === 'fa') $portalDate = weekday_name($today) . '، ' . date_i18n($today, false);
@@ -161,14 +157,14 @@ function page_header(string $pTitle = ''): void {
 <title>' . e(($pTitle ? $pTitle . ' — ' : '') . $site . ' | ' . $sub) . '</title>
 <meta name="description" content="' . e(setting('about_' . $lang, t('footer_desc'))) . '">
 <link rel="icon" href="assets/img/brand/bushehr-free-zone-logo.jpg">
-<link rel="stylesheet" href="assets/css/main.css?v=7">
+<link rel="stylesheet" href="assets/css/main.css?v=8">
 <script>try{var m=localStorage.getItem("theme")||"auto";if(m==="dark"||(m==="auto"&&matchMedia("(prefers-color-scheme:dark)").matches))document.documentElement.dataset.theme="dark"}catch(e){}</script>
 </head><body>
 <div class="u-strip"><div class="wrap">
   <div class="u-info"><span class="u-date">📅 ' . e($portalDate) . '</span><span class="sep">&nbsp;|&nbsp;</span><span class="u-hijri">🕌 ' . e($hijri) . '</span>' . ($greg !== '' ? '<span class="sep">&nbsp;|&nbsp;</span><span class="u-greg">🌍 ' . e($greg) . '</span>' : '') . '</div>
   <div class="u-quick">
-    <a href="' . e(url('announcements')) . '">' . e(t('announcements')) . '</a><span class="sep">|</span>
-    <a href="' . e(url('investments')) . '">' . e(t('investments')) . '</a><span class="sep">|</span>
+    <a href="' . e(url('announcements')) . '">' . e(t('merged_ann')) . '</a><span class="sep">|</span>
+    <a href="' . e(url('about')) . '">' . e(t('about_portal')) . '</a><span class="sep">|</span>
     <a href="admin.php">' . e(tl('پنل مدیریت', 'Admin', 'الإدارة')) . '</a>
   </div>
 </div></div>
@@ -178,8 +174,38 @@ function page_header(string $pTitle = ''): void {
     <span class="hdr-bt"><b>' . e($site) . '</b><small>' . e($sub) . '</small></span>
   </a>
   <nav class="mainnav">';
-    foreach ($nav as $k => $v) echo '<a class="nav-link' . (getp('p', 'home') === $k ? ' on' : '') . '" href="' . e(url($k)) . '">' . e($v) . '</a>';
+    $pageNow = getp('p', 'home');
+    /* items: leaf routes */
+    $leaf = [ 'home' => t('home'), 'news' => t('news'), 'events' => t('events'),
+              'announcements' => t('merged_ann'), 'about' => t('about_portal'), 'contact' => t('contact') ];
+    foreach ($leaf as $k => $v) {
+        if ($k === 'announcements') $v = t('merged_ann');
+        echo '<a class="nav-link' . ($pageNow === $k ? ' on' : '') . '" href="' . e(url($k)) . '">' . e($v) . '</a>';
+    }
+    /* dropdown: چند رسانه‌ای */
+    $mcOn = $pageNow === 'media';
+    echo '<div class="nav-li has-sub' . ($mcOn ? ' active' : '') . '">
+        <button type="button" class="nav-link dd-toggle' . ($mcOn ? ' on' : '') . '">' . e(t('multimedia')) . '<span class="dd-caret">▾</span></button>
+        <div class="subnav">
+          <a href="' . e(url('media')) . '"><b>' . e(t('media')) . '</b><small>' . e(tl('همه آثار', 'All items', 'كل الأعمال')) . '</small></a>
+          <a href="' . e(url('media', ['mc' => 'photo'])) . '">' . e(t('photos')) . '<small>' . e(t('mc_photo')) . '</small></a>
+          <a href="' . e(url('media', ['mc' => 'video'])) . '">' . e(t('videos')) . '<small>' . e(t('mc_video')) . '</small></a>
+        </div></div>';
+    /* dropdown: دسترسی سریع */
+    echo '<div class="nav-li has-sub">
+        <button type="button" class="nav-link dd-toggle">' . e(t('quick_links')) . '<span class="dd-caret">▾</span></button>
+        <div class="subnav">
+          <a href="https://my.freezones.ir" target="_blank" rel="noopener">' . e(t('services_portal')) . '</a>
+          <a href="https://www.freezones.ir" target="_blank" rel="noopener">' . e(t('sec_portal')) . '</a>
+          <a href="mailto:' . e(setting('email', 'info@bushehrfz.ir')) . '">' . e(t('zr_suggest')) . '</a>
+        </div></div>';
     echo '</nav>
+  <div class="socials" aria-label="social">
+    <a href="https://instagram.com/freena.ir" target="_blank" rel="noopener" title="Instagram"><svg viewBox="0 0 19 20" width="17" height="18" fill="currentColor" aria-hidden="true"><path d="M19 5.83V14.17a5.46 5.46 0 0 1-5.46 5.46H5.54a5.46 5.46 0 0 1-5.54-5.46V5.83A5.46 5.46 0 0 1 5.54 .04h8a5.46 5.46 0 0 1 5.46 5.79ZM17.42 5.83a3.51 3.51 0 0 0-3.52-3.5H5.54A3.51 3.51 0 0 0 2 5.83v8.28a3.51 3.51 0 0 0 3.54 3.5h8a3.51 3.51 0 0 0 3.52-3.54V5.83Zm-3.57 4.19a4.5 4.5 0 0 1-4.35 4.58A4.4 4.4 0 0 1 5.15 10a4.4 4.4 0 0 1 4.35-4.42 4.35 4.35 0 0 1 4.35 4.42ZM12.27 10a2.25 2.25 0 0 1-2.27 2.34A2.25 2.25 0 0 1 7.73 10a2.25 2.25 0 0 1 4.54 -.02Zm3.56-5.42a1.25 1.25 0 1 1-1.25-1.24 1.25 1.25 0 0 1 1.25 1.24Z"/></svg></a>
+    <a href="https://t.me/iranfreezones" target="_blank" rel="noopener" title="Telegram"><img src="assets/img/social/telegram-plane.svg" width="17" height="17" alt=""></a>
+    <a href="https://ble.ir/iranfreezones_ir" target="_blank" rel="noopener" title="Bale"><img src="assets/img/social/baleh.svg" width="17" height="17" alt=""></a>
+    <a href="http://eitaa.com/iranfreezones_ir" target="_blank" rel="noopener" title="Eitaa"><svg viewBox="0 0 20 21" width="16" height="17" fill="currentColor" aria-hidden="true"><path d="M10.49 20.54a5.68 5.68 0 0 1-4.76-4.51c-.13-.62-.146-1.39-.13-6.18.016-5.16 -.002-4.89.25-5.74a6.89 6.89 0 0 1 3.51-4.04A5.87 5.87 0 0 1 15.64 0c5.36 .03 5.19 -.01 6.06 .27a5.84 5.84 0 0 1 3.7 3.59c.28 .8 .3 .93 .317 3.05l.017 1.91-.335 .23a13.69 13.69 0 0 0-2.3 2.45 32.4 32.4 0 0 1-2.56 2.49 7.07 7.07 0 0 1-3.2 1.6 5.62 5.62 0 0 1-1.98-.08c-.47-.12-.44-.14-.62.4a5.45 5.45 0 0 0-.27 1.33l-.028.35-.125-.026a3.59 3.59 0 0 1-2.48-2.15 3.07 3.07 0 0 1-.22-1.04l-.014-.3-.265-.24Z" transform="translate(.001 -.2)"/></svg></a>
+  </div>
   <div class="top-actions">
     <form class="qsearch" action="index.php" method="get" role="search">
       <input type="hidden" name="p" value="search"><input type="hidden" name="lang" value="' . e($lang) . '">
@@ -212,9 +238,14 @@ function page_footer(): void {
     <p>' . e(t('footer_desc')) . '</p></div>
   <div><h4>' . e(t('quick_links')) . '</h4>
     <a class="flnk" href="' . e(url('news')) . '">' . e(t('news')) . '</a>
-    <a class="flnk" href="' . e(url('announcements')) . '">' . e(t('announcements')) . '</a>
-    <a class="flnk" href="' . e(url('events')) . '">' . e(t('events')) . '</a>
-    <a class="flnk" href="' . e(url('investments')) . '">' . e(t('investments')) . '</a></div>
+    <a class="flnk" href="' . e(url('announcements')) . '">' . e(t('merged_ann')) . '</a>
+    <a class="flnk" href="' . e(url('events')) . '">' . e(t('events')) . '</a></div>
+  <div><h4>' . e(t('links_col')) . '</h4>
+    <a class="flnk" href="https://my.freezones.ir" target="_blank" rel="noopener">' . e(t('services_portal')) . '</a>
+    <a class="flnk" href="https://www.freezones.ir" target="_blank" rel="noopener">' . e(t('sec_portal')) . '</a>
+    <a class="flnk" href="https://freena.ir" target="_blank" rel="noopener">' . e(t('fz_mag')) . '</a>
+    <a class="flnk" href="https://www.pmo.ir" target="_blank" rel="noopener">' . e(t('pmo')) . '</a>
+    <a class="flnk" href="https://irica.ir" target="_blank" rel="noopener">' . e(t('irica')) . '</a></div>
   <div><h4>' . e(t('contact')) . '</h4>
     <span>' . e(setting('address', '')) . '</span>
     <span dir="ltr">' . e(setting('phone', '')) . '</span>
@@ -224,7 +255,7 @@ function page_footer(): void {
   <span class="credit"><img src="assets/img/brand/liandesign-logo.png" alt="Lian Design" width="28" height="26" loading="lazy">' . e(tl('طراحی و توسعه: لیان دیزاین', 'Design & Development: Lian Design', 'التصميم والتطوير: ليان ديزاين')) . '</span>
   <button class="totop" type="button" onclick="window.scrollTo({top:0,behavior:\'smooth\'})">↑ ' . e(tl('بازگشت به بالا', 'Back to top', 'العودة إلى الأعلى')) . '</button></div></div>
 </footer>
-<script src="assets/js/main.js?v=2" defer></script>
+<script src="assets/js/main.js?v=3" defer></script>
 </body></html>';
 }
 
@@ -391,15 +422,29 @@ case 'article': {
     page_footer();
 } break;
 
-/* ===== اطلاعیه‌ها ===== */
+/* ===== اطلاعیه‌ها و فرصت‌های سرمایه‌گذاری (ترکیبی) ===== */
 case 'announcements': {
-    page_header(t('announcements'));
+    page_header(t('merged_ann'));
+    echo '<h1 class="pgtitle">' . e(t('merged_ann')) . '</h1>';
+    /* بخش اول: فرصت‌های سرمایه‌گذاری */
+    $ivs = x_list('investments', 'investment_translations', 'investment_id', 'created_at DESC', true, ['title', 'summary', 'description', 'category', 'volume', 'irr', 'payback', 'location', 'incentives']);
+    echo '<h2 class="sect-t">' . e(t('investments')) . '</h2><div class="igrid" style="grid-template-columns:1fr">';
+    foreach ($ivs as $iv) echo investment_row($iv, true);
+    if (!$ivs) echo '<div class="empty">' . e(t('no_items')) . '</div>';
+    echo '</div>';
+    /* بخش دوم: اطلاعیه‌ها */
     $rows = x_list('announcements', 'announcement_translations', 'announcement_id', 'published_at DESC', true, ['title', 'body']);
-    echo '<h1 class="pgtitle">' . e(t('announcements')) . '</h1><div class="alist">';
+    echo '<h2 class="sect-t">' . e(t('announcements')) . '</h2><div class="alist">';
     foreach ($rows as $a) echo ann_card($a, true);
     if (!$rows) echo '<div class="empty">' . e(t('no_items')) . '</div>';
     echo '</div>';
     page_footer();
+} break;
+
+/* investments به صفحه ترکیبی منتقل شد */
+case 'investments': {
+    header('Location: ' . url('announcements'));
+    exit;
 } break;
 
 /* ===== رویدادها ===== */
@@ -415,9 +460,23 @@ case 'events': {
 
 /* ===== چندرسانه ===== */
 case 'media': {
-    page_header(t('media'));
+    $mc = getp('mc', '');
+    $ttl = $mc === 'photo' ? t('photos') : ($mc === 'video' ? t('videos') : t('media'));
+    page_header($ttl);
     $rows = x_list('media_items', 'media_translations', 'media_id', 'created_at DESC', true, ['title', 'caption', 'mcategory']);
-    echo '<h1 class="pgtitle">' . e(t('media')) . '</h1><div class="mgrid">';
+    if ($mc === 'photo' || $mc === 'video') {
+        /* دسته‌بندی بر اساس مقدار فارسی mcategory */
+        $faMap = [];
+        foreach (qall("SELECT media_id, mcategory FROM media_translations WHERE lang='fa'") as $r) $faMap[(int)$r['media_id']] = (string)$r['mcategory'];
+        $grp = $mc === 'photo' ? ['گالری منظره', 'گزارش تصویری', 'مجموعه عکس'] : ['مستند کوتاه', 'ویدئوی مستند'];
+        $rows = array_values(array_filter($rows, fn($r) => in_array($faMap[(int)($r['id'] ?? 0)] ?? '', $grp, true)));
+    }
+    echo '<h1 class="pgtitle">' . e($ttl) . '</h1>
+    <div class="filters">
+      <a class="chip' . ($mc === '' ? ' on' : '') . '" href="' . e(url('media')) . '">' . e(t('media')) . '</a>
+      <a class="chip' . ($mc === 'photo' ? ' on' : '') . '" href="' . e(url('media', ['mc' => 'photo'])) . '">' . e(t('photos')) . '</a>
+      <a class="chip' . ($mc === 'video' ? ' on' : '') . '" href="' . e(url('media', ['mc' => 'video'])) . '">' . e(t('videos')) . '</a>
+    </div><div class="mgrid">';
     foreach ($rows as $mi) echo media_card($mi);
     if (!$rows) echo '<div class="empty">' . e(t('no_items')) . '</div>';
     echo '</div>';
@@ -459,6 +518,36 @@ case 'search': {
             echo '</div>' . (paginate($total, $per, $page, url('search', ['q' => $q])) ?? '');
         } else echo '<div class="empty">' . e(t('not_found')) . '</div>';
     }
+    page_footer();
+} break;
+
+/* ===== درباره ما ===== */
+case 'about': {
+    page_header(t('about_portal'));
+    echo '<h1 class="pgtitle">' . e(t('about_portal')) . '</h1>
+    <div class="pbody">
+      <p>' . e(t('about_body_p1')) . '</p>
+      <p>' . e(t('about_body_p2')) . '</p>
+      <p>' . e(t('about_body_p3')) . '</p>
+    </div>
+    <div class="cgrid">
+      <div class="ccard"><a href="' . e(url('contact')) . '" class="chip on" style="text-decoration:none">' . e(t('contact')) . '</a></div>
+      <div class="ccard"><a href="' . e(url('announcements')) . '" class="chip" style="text-decoration:none">' . e(t('merged_ann')) . '</a></div>
+    </div>';
+    page_footer();
+} break;
+
+/* ===== تماس با ما ===== */
+case 'contact': {
+    page_header(t('contact'));
+    echo '<h1 class="pgtitle">' . e(t('contact')) . '</h1>
+    <p class="intro-p">' . e(t('contact_intro')) . '</p>
+    <div class="cgrid">
+      <div class="ccard"><h3>' . e(t('address_lbl')) . '</h3><p>' . e(setting('address', '')) . '</p></div>
+      <div class="ccard"><h3>' . e(t('phone_lbl')) . '</h3><p dir="ltr">' . e(setting('phone', '')) . '</p></div>
+      <div class="ccard"><h3>' . e(t('email_lbl')) . '</h3><p dir="ltr">' . e(setting('email', '')) . '</p></div>
+      <div class="ccard"><h3>' . e(t('hours_lbl')) . '</h3><p>' . e(t('hours_val')) . '</p></div>
+    </div>';
     page_footer();
 } break;
 

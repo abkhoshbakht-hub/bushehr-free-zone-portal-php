@@ -33,6 +33,25 @@
     });
   }
 
+  /* دراپ‌داون منو (کلیک — موبایل و دسکتاپ) */
+  var toggles = document.querySelectorAll('.dd-toggle');
+  Array.prototype.forEach.call(toggles, function (t) {
+    t.addEventListener('click', function (e) {
+      e.preventDefault();
+      var li = t.closest('.has-sub');
+      if (!li) return;
+      var sub = li.querySelector('.subnav');
+      var wasOpen = sub && sub.classList.contains('open');
+      Array.prototype.forEach.call(document.querySelectorAll('.subnav.open'), function (s) { s.classList.remove('open'); });
+      if (sub && !wasOpen) sub.classList.add('open');
+    });
+  });
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest || !e.target.closest('.has-sub')) {
+      Array.prototype.forEach.call(document.querySelectorAll('.subnav.open'), function (s) { s.classList.remove('open'); });
+    }
+  });
+
   /* کپی لینک مقاله */
   window.copyLink = function () {
     var u = location.href;
