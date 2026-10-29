@@ -243,8 +243,7 @@ switch ($p) {
 /* ===== صفحه اصلی ===== */
 case 'home': {
     page_header();
-    $hero = articles_query('a.is_pinned = 1', [], 1, 0)[0] ?? null;
-    if (!$hero) $hero = articles_query('', [], 1, 0)[0] ?? null;
+    $hero = articles_query('', [], 1, 0, false, 'a.published_at DESC, a.id DESC')[0] ?? null;
     $sec = $hero ? articles_query('a.id != ' . (int)$hero['id'], [], 3, 0, false, 'a.published_at DESC, a.id DESC') : [];
 
     echo '<section class="hero"><div class="hero-grid">';
