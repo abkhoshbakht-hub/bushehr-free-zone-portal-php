@@ -157,13 +157,14 @@ function page_header(string $pTitle = ''): void {
 <title>' . e(($pTitle ? $pTitle . ' — ' : '') . $site . ' | ' . $sub) . '</title>
 <meta name="description" content="' . e(setting('about_' . $lang, t('footer_desc'))) . '">
 <link rel="icon" href="assets/img/brand/bushehr-free-zone-logo.jpg">
-<link rel="stylesheet" href="assets/css/main.css?v=10">
+<link rel="stylesheet" href="assets/css/main.css?v=11">
 <script>try{var m=localStorage.getItem("theme")||"auto";if(m==="dark"||(m==="auto"&&matchMedia("(prefers-color-scheme:dark)").matches))document.documentElement.dataset.theme="dark"}catch(e){}</script>
 </head><body>
 <div class="u-strip"><div class="wrap">
   <div class="u-info"><span class="u-date">📅 ' . e($portalDate) . '</span><span class="sep">&nbsp;|&nbsp;</span><span class="u-hijri">🕌 ' . e($hijri) . '</span>' . ($greg !== '' ? '<span class="sep">&nbsp;|&nbsp;</span><span class="u-greg">🌍 ' . e($greg) . '</span>' : '') . '</div>
 </div></div>
 <header class="hdr"><div class="wrap hdr-in">
+  <div class="hdr-row1">
   <a class="hdr-brand" href="' . e(url('home')) . '">
     <span class="hdr-logo"><img src="assets/img/brand/bushehr-free-zone-logo.jpg" alt="' . e($site) . '"></span>
     <span class="hdr-bt"><b>' . e($site) . '</b><small>' . e($sub) . '</small></span>
@@ -195,6 +196,8 @@ function page_header(string $pTitle = ''): void {
           <a href="mailto:' . e(setting('email', 'info@bushehrfz.ir')) . '">' . e(t('zr_suggest')) . '</a>
         </div></div>';
     echo '</nav>
+  </div>
+  <div class="hdr-row2">
   <div class="top-actions">
     <form class="qsearch" action="index.php" method="get" role="search">
       <input type="hidden" name="p" value="search"><input type="hidden" name="lang" value="' . e($lang) . '">
@@ -212,6 +215,7 @@ function page_header(string $pTitle = ''): void {
     echo '</div>
     <button id="themeBtn" class="icon-btn" aria-label="theme">🌒</button>
     <button id="menuBtn" class="icon-btn menu-btn">☰</button>
+  </div>
   </div>
 </div></header>
 <main class="wrap main">';
