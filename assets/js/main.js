@@ -49,6 +49,8 @@
   document.addEventListener('click', function (e) {
     if (!e.target.closest || !e.target.closest('.has-sub')) {
       Array.prototype.forEach.call(document.querySelectorAll('.subnav.open'), function (s) { s.classList.remove('open'); });
+      var act = document.activeElement;
+      if (act && act.classList && act.classList.contains('dd-toggle')) act.blur();
     }
   });
 

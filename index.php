@@ -157,16 +157,11 @@ function page_header(string $pTitle = ''): void {
 <title>' . e(($pTitle ? $pTitle . ' — ' : '') . $site . ' | ' . $sub) . '</title>
 <meta name="description" content="' . e(setting('about_' . $lang, t('footer_desc'))) . '">
 <link rel="icon" href="assets/img/brand/bushehr-free-zone-logo.jpg">
-<link rel="stylesheet" href="assets/css/main.css?v=9">
+<link rel="stylesheet" href="assets/css/main.css?v=10">
 <script>try{var m=localStorage.getItem("theme")||"auto";if(m==="dark"||(m==="auto"&&matchMedia("(prefers-color-scheme:dark)").matches))document.documentElement.dataset.theme="dark"}catch(e){}</script>
 </head><body>
 <div class="u-strip"><div class="wrap">
   <div class="u-info"><span class="u-date">📅 ' . e($portalDate) . '</span><span class="sep">&nbsp;|&nbsp;</span><span class="u-hijri">🕌 ' . e($hijri) . '</span>' . ($greg !== '' ? '<span class="sep">&nbsp;|&nbsp;</span><span class="u-greg">🌍 ' . e($greg) . '</span>' : '') . '</div>
-  <div class="u-quick">
-    <a href="' . e(url('announcements')) . '">' . e(t('merged_ann')) . '</a><span class="sep">|</span>
-    <a href="' . e(url('about')) . '">' . e(t('about_portal')) . '</a><span class="sep">|</span>
-    <a href="admin.php">' . e(tl('پنل مدیریت', 'Admin', 'الإدارة')) . '</a>
-  </div>
 </div></div>
 <header class="hdr"><div class="wrap hdr-in">
   <a class="hdr-brand" href="' . e(url('home')) . '">
@@ -258,7 +253,7 @@ function page_footer(): void {
   <span class="credit"><img src="assets/img/brand/liandesign-logo.png" alt="Lian Design" width="28" height="26" loading="lazy">' . e(tl('طراحی و توسعه: لیان دیزاین', 'Design & Development: Lian Design', 'التصميم والتطوير: ليان ديزاين')) . '</span>
   <button class="totop" type="button" onclick="window.scrollTo({top:0,behavior:\'smooth\'})">↑ ' . e(tl('بازگشت به بالا', 'Back to top', 'العودة إلى الأعلى')) . '</button></div></div>
 </footer>
-<script src="assets/js/main.js?v=3" defer></script>
+<script src="assets/js/main.js?v=4" defer></script>
 </body></html>';
 }
 
