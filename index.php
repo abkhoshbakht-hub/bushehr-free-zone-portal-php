@@ -299,10 +299,15 @@ case 'home': {
     }
     echo '</div></section>';
 
-    /* آخرین اخبار */
-    $latest = articles_query('', [], 6, 0, false, 'a.published_at DESC, a.id DESC');
-    echo '<section class="sec">' . section_head(t('latest_news'), url('news'))
-       . '<div class="ngrid">' . implode('', array_map(fn($a) => news_card($a), $latest)) . '</div></section>';
+    /* آخرین اخبار — بدون تکرار خبرهای هیرو */
+    $skip = $hero ? [(int)$hero['id']] : [];
+    foreach ($sec as $sa) $skip[] = (int)$sa['id'];
+    $skipSql = $skip ? 'a.id NOT IN (' . implode(',', $skip) . ')' : '';
+    $latest = $skipSql !== '' ? articles_query($skipSql, [], 6, 0, false, 'a.published_at DESC, a.id DESC') : articles_query('', [], 6, 0, false, 'a.published_at DESC, a.id DESC');
+    if ($latest) {
+        echo '<section class="sec">' . section_head(t('latest_news'), url('news'))
+           . '<div class="ngrid">' . implode('', array_map(fn($a) => news_card($a), $latest)) . '</div></section>';
+    }
 
     /* اطلاعیه‌ها */
     $anns = x_list('announcements', 'announcement_translations', 'announcement_id', 'published_at DESC', true, ['title', 'body'], limit: 4);
