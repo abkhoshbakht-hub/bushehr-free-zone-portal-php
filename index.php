@@ -157,7 +157,7 @@ function page_header(string $pTitle = ''): void {
 <title>' . e(($pTitle ? $pTitle . ' — ' : '') . $site . ' | ' . $sub) . '</title>
 <meta name="description" content="' . e(setting('about_' . $lang, t('footer_desc'))) . '">
 <link rel="icon" href="assets/img/brand/bushehr-free-zone-logo.jpg">
-<link rel="stylesheet" href="assets/css/main.css?v=14">
+<link rel="stylesheet" href="assets/css/main.css?v=15">
 <script>try{var m=localStorage.getItem("theme")||"auto";if(m==="dark"||(m==="auto"&&matchMedia("(prefers-color-scheme:dark)").matches))document.documentElement.dataset.theme="dark"}catch(e){}</script>
 </head><body>
 <div class="u-strip"><div class="wrap">

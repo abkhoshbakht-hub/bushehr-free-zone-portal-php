@@ -475,3 +475,11 @@ html{scroll-padding-top:172px}
 
 /* ================= v14: سوییچر زبان = عرض طبیعی محتوا، بدون فضای خالی و بدون برش ================= */
 .langsw{flex-shrink:0;min-width:0}
+
+/* ================= v15: هم‌ترازی هیرو — سه کارت کنار کاملاً هم‌ارتفاع تصویر بزرگ ================= */
+@media (min-width:1021px){
+  .hero-side{display:grid;grid-template-rows:repeat(3,minmax(0,1fr));gap:12px;align-self:stretch}
+  .hero-card{align-items:stretch}
+  .hc-im{height:100%;min-height:0}
+  .hero-card .hc-bd{align-self:center}
+}
