@@ -18,7 +18,7 @@ function admin_header(string $title, string $act): void {
     echo '<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1"><meta name="robots" content="noindex">
 <title>' . e($title) . ' — پنل مدیریت</title>
-<link rel="stylesheet" href="assets/css/admin.css?v=1"></head>
+<link rel="stylesheet" href="assets/css/admin.css?v=2"></head>
 <body data-act="' . e($act) . '"><div class="adm"><aside class="side">
 <div class="side-brand">خبررسانی منطقه آزاد<br><small>پنل مدیریت</small></div>';
     foreach ($NAV as $k => $v) echo '<a class="sitem' . ($act === $k ? ' on' : '') . '" href="' . e(admin_url($k)) . '">' . $v . '</a>';
@@ -36,24 +36,24 @@ function admin_footer(): void { echo '</main></div></body></html>'; }
 $TYPES = [
     'anns'  => ['t' => 'اطلاعیه‌ها', 'table' => 'announcements', 'tr' => 'announcement_translations', 'fk' => 'announcement_id',
                 'tcols' => ['title', 'body'], 'order' => 'published_at DESC',
-                'cols' => ['published_at', 'type', 'status', 'reference_code'], 'desc' => 'بیانیه‌ها و اطلاعیه‌های رسمی سازمان'],
+                'cols' => ['published_at', 'type', 'status', 'reference_code'], 'desc' => 'بیانیه‌ها و اطلاعیه‌های رسمی سازمان — نمایش در صفحه «اطلاعیه‌ها و فرصت‌های سرمایه‌گذاری» سایت'],
     'evs'   => ['t' => 'رویدادها', 'table' => 'events', 'tr' => 'event_translations', 'fk' => 'event_id',
                 'tcols' => ['title', 'description', 'location', 'category'], 'order' => 'event_date ASC',
                 'cols' => ['event_date', 'event_time'],
                 'lbl' => ['title' => 'عنوان', 'description' => 'شرح رویداد', 'location' => 'محل برگزاری', 'category' => 'موضوع'],
-                'desc' => 'همایش‌ها و نشست‌های پیش‌رو'],
+                'desc' => 'همایش‌ها و نشست‌های پیش‌رو — نمایش در صفحه «رویدادها» و بخش خانه سایت'],
     'mds'   => ['t' => 'چندرسانه', 'table' => 'media_items', 'tr' => 'media_translations', 'fk' => 'media_id',
                 'tcols' => ['title', 'caption', 'mcategory'], 'order' => 'created_at DESC',
                 'cols' => ['type', 'source_url', 'duration', 'photo_count'], 'imgField' => 'source_url',
                 'lbl' => ['title' => 'عنوان', 'caption' => 'شرح تصویر', 'mcategory' => 'دسته نمایش'],
-                'desc' => 'گزارش تصویری و ویدیویی'],
+                'desc' => 'گزارش تصویری و ویدیویی — نمایش در صفحه «چندرسانه‌ای» سایت'],
     'invs'  => ['t' => 'فرصت‌های سرمایه‌گذاری', 'table' => 'investments', 'tr' => 'investment_translations', 'fk' => 'investment_id',
                 'tcols' => ['title', 'summary', 'description', 'category', 'volume', 'irr', 'payback', 'location', 'incentives'],
                 'order' => 'created_at DESC', 'cols' => ['image'], 'imgField' => 'image',
                 'lbl' => ['title' => 'عنوان', 'summary' => 'خلاصه', 'description' => 'شرح پروژه', 'category' => 'حوزه',
                           'volume' => 'حجم سرمایه', 'irr' => 'نرخ بازگشت (IRR)', 'payback' => 'دوره بازگشت',
                           'location' => 'موقعیت', 'incentives' => 'مشوق‌ها (با | جدا کنید)'],
-                'desc' => 'پروژه‌های پیشنهادی سرمایه‌گذاری'],
+                'desc' => 'پروژه‌های پیشنهادی سرمایه‌گذاری — نمایش در صفحه «اطلاعیه‌ها و فرصت‌های سرمایه‌گذاری» سایت'],
 ];
 
 $a = getp('a', 'dash');
@@ -75,6 +75,9 @@ if ($a === 'login' || is_admin() === false && $a === 'login') {
     admin_footer(); exit;
 }
 admin_guard();
+
+/* چهار خبر تازه منتشرشده = هیرو صفحه اصلی (منطق دقیقاً مثل index.php) */
+$hero_ids = array_map(fn($r) => (int)$r['id'], qall("SELECT id FROM articles WHERE is_published = 1 ORDER BY published_at DESC, id DESC LIMIT 4"));
 
 /* ---------- تابع عمومی حذف ---------- */
     if (is_post() && post('op') === 'del') {
@@ -107,7 +110,7 @@ case 'dash': {
       <div class="kpi"><b>' . fa_num($views) . '</b><span>مجموع بازدید</span></div></div>
       <div class="panel"><h2>آخرین اخبار ثبت‌شده</h2><table><tr><th>عنوان</th><th>وضعیت</th><th>تاریخ</th><th></th></tr>';
     foreach (qall("SELECT a.id, a.is_published, a.published_at, t.title FROM articles a JOIN article_translations t ON t.article_id = a.id AND t.lang = 'fa' ORDER BY a.id DESC LIMIT 8") as $r)
-        echo '<tr><td>' . e($r['title']) . '</td><td><span class="bdg ' . ($r['is_published'] ? 'g' : 'y') . '">' . ($r['is_published'] ? 'منتشرشده' : 'پیش‌نویس') . '</span></td><td>' . e(date_i18n($r['published_at'], false)) . '</td>
+        echo '<tr><td>' . e($r['title']) . (in_array((int)$r['id'], $hero_ids, true) ? ' <span class="bdg b">🏆 هیرو</span>' : '') . '</td><td><span class="bdg ' . ($r['is_published'] ? 'g' : 'y') . '">' . ($r['is_published'] ? 'منتشرشده' : 'پیش‌نویس') . '</span></td><td>' . e(date_i18n($r['published_at'], false)) . '</td>
             <td><a class="lnk" href="' . e(admin_url('art_edit', ['id' => $r['id']])) . '">ویرایش</a></td></tr>';
     echo '</table></div>';
     admin_footer();
@@ -123,11 +126,11 @@ case 'arts': {
     echo '<div class="tools"><form method="get"><input type="hidden" name="a" value="arts"><input name="q" placeholder="جستجوی عنوان…" value="' . e($sq) . '"><button class="btn ghost">جستجو</button></form>
     <a class="btn" href="' . e(admin_url('art_edit')) . '">+ خبر جدید</a></div>
     <table class="lt"><tr><th>#</th><th>عنوان</th><th>دسته</th><th>انتشار</th><th>سنجاق</th><th>بازدید</th><th>تاریخ</th><th>عملیات</th></tr>';
-    foreach (qall("SELECT a.*, t.title, c.id AS cid FROM articles a
+    foreach (qall("SELECT a.*, t.title, c.id AS cid, c.name AS cname FROM articles a
                    JOIN article_translations t ON t.article_id = a.id AND t.lang='fa'
                    LEFT JOIN category_translations c ON c.category_id = a.category_id AND c.lang='fa'
                    " . ($w ? "WHERE $w " : "") . "ORDER BY a.id DESC LIMIT $per OFFSET $off", $p) as $r) {
-        echo '<tr><td>' . fa_num((int)$r['id']) . '</td><td class="tt">' . e($r['title']) . '</td><td>' . e($r['cid'] ? '' : '') . '</td>
+        echo '<tr><td>' . fa_num((int)$r['id']) . '</td><td class="tt">' . e($r['title']) . (in_array((int)$r['id'], $hero_ids, true) ? ' <span class="bdg b">🏆 هیرو</span>' : '') . '</td><td class="dim">' . e($r['cname'] ?: '—') . '</td>
           <td><span class="bdg ' . ($r['is_published'] ? 'g' : 'y') . '">' . ($r['is_published'] ? '✅' : 'پیش‌نویس') . '</span></td>
           <td>' . ($r['is_pinned'] ? '📌' : '') . '</td><td>' . fa_num((int)$r['views']) . '</td><td>' . e(date_i18n($r['published_at'], false)) . '</td>
           <td class="ops"><a href="' . e(admin_url('art_edit', ['id' => $r['id']])) . '">✏️</a>
@@ -405,7 +408,7 @@ case 'pulse': {
 case 'set': {
     if (is_post() && post('op') === 'set') {
         csrf_check();
-        foreach (['site_name_fa', 'site_name_en', 'site_name_ar', 'about', 'email', 'phone', 'address', 'telegram', 'instagram', 'twitter'] as $k) {
+        foreach (['site_name_fa', 'site_name_en', 'site_name_ar', 'about', 'email', 'phone', 'address', 'telegram', 'instagram', 'bale', 'eitaa'] as $k) {
             q("INSERT INTO settings (k, v) VALUES (?,?) ON DUPLICATE KEY UPDATE v = VALUES(v)", [$k, post($k)]);
         }
         flash('تنظیمات ذخیره شد.'); redirect(admin_url('set'));
@@ -428,10 +431,12 @@ case 'set': {
     <label>ایمیل</label><input name="email" dir="ltr" value="' . e($s['email'] ?? '') . '">
     <label>تلفن</label><input name="phone" dir="ltr" value="' . e($s['phone'] ?? '') . '">
     <label>آدرس</label><input name="address" value="' . e($s['address'] ?? '') . '"></div>
-    <div class="panel"><h2>شبکه‌های اجتماعی</h2>
-    <label>تلگرام</label><input name="telegram" dir="ltr" value="' . e($s['telegram'] ?? '') . '">
-    <label>اینستاگرام</label><input name="instagram" dir="ltr" value="' . e($s['instagram'] ?? '') . '">
-    <label>X (توییتر)</label><input name="twitter" dir="ltr" value="' . e($s['twitter'] ?? '') . '"></div>
+    <div class="panel"><h2>شبکه‌های اجتماعی — آیکون‌های فوتر سایت از همین‌جا خوانده می‌شود</h2>
+    <label>اینستاگرام (لینک کامل یا فقط آیدی)</label><input name="instagram" dir="ltr" value="' . e($s['instagram'] ?? '') . '" placeholder="https://instagram.com/… یا mypage">
+    <label>تلگرام (لینک کامل یا فقط آیدی)</label><input name="telegram" dir="ltr" value="' . e($s['telegram'] ?? '') . '" placeholder="https://t.me/… یا mypage">
+    <label>بله (لینک کامل یا فقط آیدی)</label><input name="bale" dir="ltr" value="' . e($s['bale'] ?? '') . '" placeholder="https://ble.ir/… یا mypage">
+    <label>ایتا (لینک کامل یا فقط آیدی)</label><input name="eitaa" dir="ltr" value="' . e($s['eitaa'] ?? '') . '" placeholder="https://eitaa.com/… یا mypage">
+    <p class="sub">بدون مقدار، همان لینک‌های فعلی (پیش‌فرض) در فوتر دیده می‌شود.</p></div>
     <button class="btn">💾 ذخیره تنظیمات</button></form>
     <div class="panel"><h2>تغییر رمز مدیر</h2><form method="post">' . csrf_field() . '<input type="hidden" name="op" value="pw">
     <label>رمز جدید (حداقل ۸)</label><input name="pw1" type="password" minlength="8" required>

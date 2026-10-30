@@ -85,3 +85,6 @@ textarea.mono{direction:rtl}
   .side-brand{border:0}
   .tt{max-width:200px}
 }
+
+/* v2: برچسب هیرو در لیست اخبار و داشبورد */
+.bdg.b{background:#e8f1ff;color:#1552c8}
