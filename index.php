@@ -378,7 +378,7 @@ case 'home': {
     /* رویدادها */
     $evs = x_list('events', 'event_translations', 'event_id', 'event_date ASC', true, ['title', 'description', 'location', 'category'], where: ['x.event_date >= CURDATE()'], limit: 4);
     if ($evs) {
-        echo '<section class="sec sec-band sec-ev">' . section_head(t('events'), url('events')) . '<div class="egrid">';
+        echo '<section class="sec sec-band sec-ev">' . section_head(tl('رویدادهای آتی', 'Upcoming Events', 'الأحداث القادمة'), url('events')) . '<div class="egrid">';
         foreach ($evs as $ev) echo event_card($ev);
         echo '</div></section>';
     }
