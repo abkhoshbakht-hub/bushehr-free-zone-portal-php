@@ -320,14 +320,6 @@ case 'home': {
         echo '</div></section>';
     }
 
-    /* چندرسانه */
-    $md = x_list('media_items', 'media_translations', 'media_id', 'created_at DESC', true, ['title', 'caption', 'mcategory'], limit: 3);
-    if ($md) {
-        echo '<section class="sec">' . section_head(t('media'), url('media')) . '<div class="mgrid">';
-        foreach ($md as $mi) echo media_card($mi);
-        echo '</div></section>';
-    }
-
     /* سرمایه‌گذاری */
     $invs = x_list('investments', 'investment_translations', 'investment_id', 'created_at DESC', true, ['title', 'summary', 'description', 'category', 'volume', 'irr', 'payback', 'location', 'incentives'], limit: 4);
     if ($invs) {
