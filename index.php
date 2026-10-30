@@ -469,18 +469,6 @@ case 'media': {
     page_footer();
 } break;
 
-/* ===== سرمایه‌گذاری ===== */
-case 'investments': {
-    page_header(t('investments'));
-    $rows = x_list('investments', 'investment_translations', 'investment_id', 'created_at DESC', true, ['title', 'summary', 'description', 'category', 'volume', 'irr', 'payback', 'location', 'incentives']);
-    echo '<h1 class="pgtitle">' . e(t('investments')) . '<div style="font-size:13px;color:var(--muted);font-family:var(--f-app);font-weight:400;margin-top:4px">' . e(tl('فرصت‌های رسمی سرمایه‌گذاری منطقه آزاد بوشهر', 'Official investment opportunities of Bushehr Free Zone', 'فرصت الاستثمار الرسمية في المنطقة الحرة بوشهر')) . '</div></h1>';
-    echo '<div class="igrid" style="grid-template-columns:1fr">';
-    foreach ($rows as $iv) echo investment_row($iv, true);
-    if (!$rows) echo '<div class="empty">' . e(t('no_items')) . '</div>';
-    echo '</div>';
-    page_footer();
-} break;
-
 /* ===== جستجو ===== */
 case 'search': {
     page_header($q !== '' ? t('search') . ': ' . $q : t('search'));
