@@ -319,14 +319,6 @@ case 'home': {
         foreach ($evs as $ev) echo event_card($ev);
         echo '</div></section>';
     }
-
-    /* سرمایه‌گذاری */
-    $invs = x_list('investments', 'investment_translations', 'investment_id', 'created_at DESC', true, ['title', 'summary', 'description', 'category', 'volume', 'irr', 'payback', 'location', 'incentives'], limit: 4);
-    if ($invs) {
-        echo '<section class="sec">' . section_head(t('investments'), url('investments')) . '<div class="igrid">';
-        foreach ($invs as $iv) echo investment_row($iv);
-        echo '</div></section>';
-    }
     page_footer();
 } break;
 
