@@ -475,7 +475,7 @@ function weekday_name(string $ymd): string {
               ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'][$w]);
 }
 
-/* ---------- فید بنادر آزاد ایران (منبع: فرینا، بدون بوشهر) ---------- */
+/* ---------- فید بنادر آزاد ایران (منبع: فرینا، همیشه تازه‌ترین اخبار، بدون بوشهر) ---------- */
 function freena_ports(int $limit = 4): array {
     $dir = __DIR__ . '/cache';
     if (!is_dir($dir)) @mkdir($dir, 0775, true);
@@ -510,7 +510,6 @@ function freena_ports(int $limit = 4): array {
         $rss = @simplexml_load_string($xml);
         libxml_clear_errors();
         if ($rss !== false) {
-            $kw = ['بندر', 'بندرعباس', 'شهید رجایی', 'بندرلنگه', 'ماهشهر', 'خرمشهر', 'انزلی', 'چابهار', 'اروند', 'قشم', 'کشتی', 'کشتیرانی', 'دریایی', 'لنگرگاه', 'کشاورزی دریا', 'دریا'];
             foreach ($rss->channel->item as $it) {
                 $title = trim((string)$it->title);
                 if ($title === '' || mb_stripos($title, 'بوشهر') !== false) continue;
@@ -522,18 +521,14 @@ function freena_ports(int $limit = 4): array {
                     $dd = DateTimeImmutable::createFromFormat($f, $raw);
                     if ($dd !== false) { $ts = $dd->format('Y-m-d H:i:s'); break; }
                 }
-                $isPort = false;
-                foreach ($kw as $w) if (mb_stripos($title, $w) !== false || mb_stripos($desc, $w) !== false) { $isPort = true; break; }
                 $items[] = [
                     't' => $title, 'u' => trim((string)$it->link),
-                    'x' => excerpt($desc, 110), 'img' => $imgU, 'dt' => $ts, 'p' => $isPort ? 1 : 0,
+                    'x' => excerpt($desc, 110), 'img' => $imgU, 'dt' => $ts,
                 ];
             }
             usort($items, fn($a, $b) => strcmp($b['dt'], $a['dt']));
-            $port = array_values(array_filter($items, fn($x) => $x['p'] === 1));
-            /* اگر خبرهای بندری کافی بود فقط آن‌ها، وگرنه تازه‌ترین خبرهای مناطق آزاد (به‌جز بوشهر) */
-            $final = (count($port) >= 3) ? $port : $items;
-            $items = array_slice($final, 0, 14);
+            /* ۴ کارت همیشه = تازه‌ترین خبرهای فید (به‌جز بوشهر) */
+            $items = array_slice($items, 0, 14);
             @file_put_contents($cache, json_encode($items, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
         }
     }
