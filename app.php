@@ -99,7 +99,7 @@ function date_i18n(string $dt, bool $withTime = true): string {
         [$jy, $jm, $jd] = g2j((int)$y, (int)$m, (int)$d);
         $fa = fa_months(); $persianDigits = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
         $str = strtr("$jd {$fa[$jm]} $jy", array_combine(range(0, 9), $persianDigits));
-        return $withTime ? $str . '، ' . date('H:i', $ts) : $str;
+        return $withTime ? $str . '، ' . fa_num(date('H:i', $ts)) : $str;
     }
     if ($lang === 'ar') {
         $mo = ar_months();
@@ -473,4 +473,70 @@ function weekday_name(string $ymd): string {
     return tl(['یکشنبه','دوشنبه','سه‌شنبه','چهارشنبه','پنجشنبه','جمعه','شنبه'][$w],
               ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][$w],
               ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'][$w]);
+}
+
+/* ---------- فید بنادر آزاد ایران (منبع: فرینا، بدون بوشهر) ---------- */
+function freena_ports(int $limit = 4): array {
+    $dir = __DIR__ . '/cache';
+    if (!is_dir($dir)) @mkdir($dir, 0775, true);
+    $cache = $dir . '/freena-rss.json';
+    $ttl = 20 * 60;
+    $readCache = function () use ($cache): array {
+        if (!is_file($cache)) return [];
+        $j = json_decode((string)@file_get_contents($cache), true);
+        return is_array($j) ? $j : [];
+    };
+    if (is_file($cache) && (time() - (int)filemtime($cache)) < $ttl) {
+        $c = $readCache();
+        if ($c) return array_slice($c, 0, $limit);
+    }
+    $xml = '';
+    if (function_exists('curl_init')) {
+        $ch = curl_init('https://freena.ir/rss');
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true, CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_CONNECTTIMEOUT => 5, CURLOPT_TIMEOUT => 10,
+            CURLOPT_USERAGENT => 'Mozilla/5.0 (compatible; BushehrFZPortal/1.0; +site news portal)',
+        ]);
+        $xml = (string)curl_exec($ch);
+        curl_close($ch);
+    } else {
+        $ctx = stream_context_create(['http' => ['timeout' => 10, 'header' => "User-Agent: Mozilla/5.0 (compatible; BushehrFZPortal/1.0)\r\n"]]);
+        $xml = (string)@file_get_contents('https://freena.ir/rss', false, $ctx);
+    }
+    $items = [];
+    if ($xml !== '' && mb_stripos($xml, '<item') !== false) {
+        libxml_use_internal_errors(true);
+        $rss = @simplexml_load_string($xml);
+        libxml_clear_errors();
+        if ($rss !== false) {
+            $kw = ['بندر', 'بندرعباس', 'شهید رجایی', 'بندرلنگه', 'ماهشهر', 'خرمشهر', 'انزلی', 'چابهار', 'اروند', 'قشم', 'کشتی', 'کشتیرانی', 'دریایی', 'لنگرگاه', 'کشاورزی دریا', 'دریا'];
+            foreach ($rss->channel->item as $it) {
+                $title = trim((string)$it->title);
+                if ($title === '' || mb_stripos($title, 'بوشهر') !== false) continue;
+                $desc = trim((string)$it->description);
+                $imgU = (string)($it->media['url'] ?? ($it->media->url ?? ($it->image->url ?? '')));
+                $raw = trim((string)$it->pubDate);
+                $ts = '';
+                foreach (['Y-m-d H:i:s', DateTime::RSS, DateTime::RFC822] as $f) {
+                    $dd = DateTimeImmutable::createFromFormat($f, $raw);
+                    if ($dd !== false) { $ts = $dd->format('Y-m-d H:i:s'); break; }
+                }
+                $isPort = false;
+                foreach ($kw as $w) if (mb_stripos($title, $w) !== false || mb_stripos($desc, $w) !== false) { $isPort = true; break; }
+                $items[] = [
+                    't' => $title, 'u' => trim((string)$it->link),
+                    'x' => excerpt($desc, 110), 'img' => $imgU, 'dt' => $ts, 'p' => $isPort ? 1 : 0,
+                ];
+            }
+            usort($items, fn($a, $b) => strcmp($b['dt'], $a['dt']));
+            $port = array_values(array_filter($items, fn($x) => $x['p'] === 1));
+            /* اگر خبرهای بندری کافی بود فقط آن‌ها، وگرنه تازه‌ترین خبرهای مناطق آزاد (به‌جز بوشهر) */
+            $final = (count($port) >= 3) ? $port : $items;
+            $items = array_slice($final, 0, 14);
+            @file_put_contents($cache, json_encode($items, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+        }
+    }
+    if (!$items) $items = $readCache();
+    return array_slice(array_values($items), 0, $limit);
 }

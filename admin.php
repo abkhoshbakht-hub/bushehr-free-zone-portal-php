@@ -36,10 +36,10 @@ function admin_footer(): void { echo '</main></div></body></html>'; }
 $TYPES = [
     'anns'  => ['t' => 'اطلاعیه‌ها', 'table' => 'announcements', 'tr' => 'announcement_translations', 'fk' => 'announcement_id',
                 'tcols' => ['title', 'body'], 'order' => 'published_at DESC',
-                'cols' => ['published_at', 'type', 'status', 'reference_code'], 'desc' => 'بیانیه‌ها و اطلاعیه‌های رسمی سازمان — نمایش در صفحه «اطلاعیه‌ها و فرصت‌های سرمایه‌گذاری» سایت'],
+                'cols' => ['published_at', 'type', 'status', 'reference_code'], 'imgField' => 'image', 'desc' => 'بیانیه‌ها و اطلاعیه‌های رسمی سازمان — نمایش در صفحه «اطلاعیه‌ها و فرصت‌های سرمایه‌گذاری» سایت'],
     'evs'   => ['t' => 'رویدادها', 'table' => 'events', 'tr' => 'event_translations', 'fk' => 'event_id',
                 'tcols' => ['title', 'description', 'location', 'category'], 'order' => 'event_date ASC',
-                'cols' => ['event_date', 'event_time'],
+                'cols' => ['event_date', 'event_time'], 'imgField' => 'image',
                 'lbl' => ['title' => 'عنوان', 'description' => 'شرح رویداد', 'location' => 'محل برگزاری', 'category' => 'موضوع'],
                 'desc' => 'همایش‌ها و نشست‌های پیش‌رو — نمایش در صفحه «رویدادها» و بخش خانه سایت'],
     'mds'   => ['t' => 'چندرسانه', 'table' => 'media_items', 'tr' => 'media_translations', 'fk' => 'media_id',
@@ -265,7 +265,8 @@ case in_array($a, array_keys($TYPES), true): {
                 default        => $v !== '' ? $v : null,
             };
         }
-        if (($T['imgField'] ?? false) && ($up = handle_upload('image', $a === 'invs' ? 'invest' : 'media')))
+        $updir = match ($a) { 'invs' => 'invest', 'anns' => 'anns', 'evs' => 'events', default => 'media' };
+        if (($T['imgField'] ?? false) && ($up = handle_upload('image', $updir)))
             $vals[$T['imgField']] = $up;
         $dxf = [];
         foreach (all_langs() as $l) { $dxf[$l] = []; foreach ($T['tcols'] as $tc) $dxf[$l][$tc] = post("f_{$tc}_$l"); }
@@ -307,9 +308,13 @@ case in_array($a, array_keys($TYPES), true): {
             echo '</select><label>وضعیت</label><select name="status">';
             foreach (['active' => 'فعال', 'new' => 'جدید', 'deadline' => 'مهلت محدود', 'expired' => 'پایان‌یافته'] as $k => $v)
                 echo '<option value="' . $k . '"' . (($row['status'] ?? 'active') === $k ? ' selected' : '') . '>' . $v . '</option>';
-            echo '</select><label>کد رهگیری</label><input dir="ltr" name="reference_code" value="' . e($row['reference_code'] ?? '') . '">';
+            echo '</select><label>کد رهگیری</label><input dir="ltr" name="reference_code" value="' . e($row['reference_code'] ?? '') . '">'
+               . (($im = img($row['image'] ?? null)) ? '<label>تصویر فعلی</label><img class="prev" src="' . e($im) . '">' : '')
+               . '<label>تصویر اطلاعیه (jpg/png/webp — حداکثر 4MB)</label><input type="file" name="image" accept="image/*">';
         }
-        if ($a === 'evs')  echo '<label>تاریخ رویداد</label><input type="date" name="event_date" value="' . e($row['event_date'] ?? '') . '"><label>ساعت</label><input type="time" name="event_time" value="' . e(substr((string)($row['event_time'] ?? ''), 0, 5)) . '">';
+        if ($a === 'evs')  echo '<label>تاریخ رویداد</label><input type="date" name="event_date" value="' . e($row['event_date'] ?? '') . '"><label>ساعت</label><input type="time" name="event_time" value="' . e(substr((string)($row['event_time'] ?? ''), 0, 5)) . '">'
+            . (($im = img($row['image'] ?? null)) ? '<label>تصویر فعلی</label><img class="prev" src="' . e($im) . '">' : '')
+            . '<label>تصویر رویداد (jpg/png/webp — حداکثر 4MB)</label><input type="file" name="image" accept="image/*">';
         if ($a === 'mds') {
             echo '<label>نوع</label><select name="type"><option value="photo"' . (($row['type'] ?? 'photo') === 'photo' ? ' selected' : '') . '>عکس</option><option value="video"' . (($row['type'] ?? '') === 'video' ? ' selected' : '') . '>ویدیو</option></select>
             <label>آپلود تصویر/پوستر</label><input type="file" name="image" accept="image/*">

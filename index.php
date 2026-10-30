@@ -47,8 +47,8 @@ function news_card(array $a, bool $big = false): string {
         <a class="ncard-im" href="' . e($per) . '">' . ($im ? '<img src="' . e($im) . '" alt="' . e($a['title']) . '" loading="lazy">' : '<span class="noimg">📰</span>') . '</a>
         <div class="ncard-bd">' . ($cat ? '<span class="ncard-cat">' . e($cat) . '</span>' : '') . '
             <div class="ncard-meta"><time>' . e(date_i18n($a['published_at'], false)) . '</time></div>
-            <h3 class="ncard-t"><a href="' . e($per) . '">' . e($a['title']) . '</a></h3>
-            <p class="ncard-x">' . e(excerpt($a['excerpt'] ?? '', $big ? 220 : 110)) . '</p>
+            <h3 class="ncard-t"><a href="' . e($per) . '">' . e(num_i18n((string)$a['title'])) . '</a></h3>
+            <p class="ncard-x">' . e(num_i18n(excerpt($a['excerpt'] ?? '', $big ? 220 : 110))) . '</p>
         </div></article>';
 }
 function section_head(string $title, ?string $link = null): string {
@@ -60,7 +60,7 @@ function edate_box(string $ymd): string {
     if (lang() === 'fa') {
         [, $jm, $jd] = (array)g2j((int)date('Y', $ts), (int)date('n', $ts), (int)date('j', $ts));
         $mN = fa_months()[(int)$jm] ?? '';
-        $d = (string)$jd;
+        $d = num_i18n((string)$jd);
     } else {
         $mn = lang() === 'ar' ? [1=>'يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر']
                               : [1=>'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -68,11 +68,34 @@ function edate_box(string $ymd): string {
     }
     return '<div class="edate"><b>' . e($d) . '</b><span>' . e($mN) . '</span></div>';
 }
+/* روزهای باقی‌مانده تا رویداد (برای چیپ شمارش معکوس) */
+function event_days_left(string $ymd): ?int {
+    $ts = strtotime($ymd . ' 00:00:00'); if (!$ts) return null;
+    $today = strtotime(date('Y-m-d 00:00:00'));
+    return (int)round(($ts - $today) / 86400);
+}
 function event_card(array $ev): string {
     $dm = $ev['event_date'] ? date_i18n($ev['event_date'], false) : '';
-    return '<div class="ecard">' . edate_box((string)($ev['event_date'] ?? ''))
-        . '<div class="ebd"><h3>' . e($ev['title']) . '</h3><p>' . e(excerpt($ev['description'] ?? '', 130)) . '</p>'
+    $dl = event_days_left((string)($ev['event_date'] ?? ''));
+    $soon = $dl !== null && $dl >= 0 && $dl <= 3;
+    $edays = '';
+    if ($dl !== null && $dl >= 0) {
+        if ($dl === 0) {
+            $edays = tl('برگزاری امروز', 'Happens today', 'يُقام اليوم');
+        } else {
+            $lbl = lang() === 'fa' ? 'روز مانده'
+                 : (lang() === 'en' ? ($dl === 1 ? 'day left' : 'days left')
+                                    : ($dl === 1 ? 'يوم متبقي' : 'أيام متبقية'));
+            $edays = num_i18n((string)$dl) . ' ' . $lbl;
+        }
+    }
+    $im = img($ev['image'] ?? '');
+    return '<div class="ecard' . ($soon ? ' e-soon' : '') . ($im ? ' has-im' : '') . '">'
+        . ($im ? '<div class="e-im"><img src="' . e($im) . '" alt="' . e((string)$ev['title']) . '" loading="lazy"></div>' : '')
+        . edate_box((string)($ev['event_date'] ?? ''))
+        . '<div class="ebd"><h3>' . e(num_i18n((string)$ev['title'])) . '</h3><p>' . e(num_i18n(excerpt($ev['description'] ?? '', 130))) . '</p>'
         . '<div class="emeta">'
+        . ($edays !== '' ? '<span class="echip edays">⏳ ' . e($edays) . '</span>' : '')
         . ($dm ? '<span class="echip">🗓 ' . e($dm) . '</span>' : '')
         . (!empty($ev['event_time']) ? '<span class="echip">🕐 ' . e(num_i18n(substr((string)$ev['event_time'], 0, 5))) . '</span>' : '')
         . (!empty($ev['location']) ? '<span class="echip">📍 ' . e($ev['location']) . '</span>' : '')
@@ -88,11 +111,16 @@ function ann_card(array $a, bool $full = false): string {
     $tp = explode('|', $types[$a['type']] ?? '||');
     $ts = explode('|', $stat[$a['status']] ?? '||');
     $iconMap = ['tender' => '📊', 'auction' => '🔨', 'notice' => '📢', 'call' => '📣'];
-    return '<div class="acard"><div class="acard-ic">' . ($iconMap[$a['type']] ?? '📢') . '</div><div class="acard-bd">
-        <h3>' . e($a['title']) . '</h3>' . ($full ? '<p>' . nl2br(e($a['body'] ?? '')) . '</p>' : '<p>' . e(excerpt($a['body'] ?? '', 150)) . '</p>') . '
+    $ic = $iconMap[$a['type']] ?? '📢';
+    $im = img($a['image'] ?? '');
+    $head = $im
+        ? '<div class="a-im"><img src="' . e($im) . '" alt="' . e((string)$a['title']) . '" loading="lazy"><span class="a-ic">' . $ic . '</span></div>'
+        : '<div class="a-im a-im-typo"><span class="a-ic">' . $ic . '</span></div>';
+    return '<div class="acard a-' . e((string)$a['type']) . ($im ? ' has-im' : '') . '">' . $head . '<div class="acard-bd">
+        <h3>' . e(num_i18n((string)$a['title'])) . '</h3>' . ($full ? '<p>' . nl2br(e(num_i18n((string)($a['body'] ?? '')))) . '</p>' : '<p>' . e(num_i18n(excerpt($a['body'] ?? '', 150))) . '</p>') . '
         <div class="acard-meta">' . (($tp[$tIdx] ?? '') !== '' ? '<span class="abadge ' . e((string)$a['type']) . '">' . e($tp[$tIdx]) . '</span>' : '')
         . (($ts[$tIdx] ?? '') !== '' ? '<span class="abadge st-' . e((string)$a['status']) . '">' . e($ts[$tIdx]) . '</span>' : '')
-        . (!empty($a['reference_code']) ? '<span class="refcode">' . e((string)$a['reference_code']) . '</span>' : '')
+        . (!empty($a['reference_code']) ? '<span class="refcode">' . e(num_i18n((string)$a['reference_code'])) . '</span>' : '')
         . '<time>' . e(date_i18n((string)($a['published_at'] ?? ''), false)) . '</time></div></div></div>';
 }
 function media_card(array $mi): string {
@@ -164,7 +192,7 @@ function page_header(string $pTitle = ''): void {
 <title>' . e(($pTitle ? $pTitle . ' — ' : '') . $site . ' | ' . $sub) . '</title>
 <meta name="description" content="' . e(setting('about_' . $lang, t('footer_desc'))) . '">
 <link rel="icon" href="assets/img/brand/bushehr-free-zone-logo.jpg">
-<link rel="stylesheet" href="assets/css/main.css?v=15">
+<link rel="stylesheet" href="assets/css/main.css?v=17">
 <script>try{var m=localStorage.getItem("theme")||"auto";if(m==="dark"||(m==="auto"&&matchMedia("(prefers-color-scheme:dark)").matches))document.documentElement.dataset.theme="dark"}catch(e){}</script>
 </head><body>
 <div class="u-strip"><div class="wrap">
@@ -257,7 +285,7 @@ function page_footer(): void {
     <a class="flnk" href="https://irica.ir" target="_blank" rel="noopener">' . e(t('irica')) . '</a></div>
   <div><h4>' . e(t('contact')) . '</h4>
     <span>' . e(setting('address', '')) . '</span>
-    <span dir="ltr">' . e(setting('phone', '')) . '</span>
+    <span dir="ltr">' . e(num_i18n((string)setting('phone', ''))) . '</span>
     <span dir="ltr">' . e(setting('email', '')) . '</span></div>
 </div>
 <div class="foot-b"><span>© ' . e(num_i18n((int)date('Y'))) . ' ' . e($site) . '</span>
@@ -292,15 +320,15 @@ case 'home': {
         echo '<a class="hero-main" href="' . e(url('article', ['id' => $hero['id']])) . '">'
            . ($im ? '<img src="' . e($im) . '" alt="">' : '<div class="hero-noimg noimg"></div>')
            . '<div class="hero-bd"><span class="badge">' . e(t('top_story')) . '</span>'
-           . '<h2 class="hero-t">' . e($hero['title']) . '</h2>'
-           . '<p class="hero-x">' . e(excerpt($hero['excerpt'] ?? '', 180)) . '</p>'
+           . '<h2 class="hero-t">' . e(num_i18n((string)$hero['title'])) . '</h2>'
+           . '<p class="hero-x">' . e(num_i18n(excerpt($hero['excerpt'] ?? '', 180))) . '</p>'
            . '<div class="meta"><time>' . e(date_i18n($hero['published_at'])) . '</time></div></div></a>';
         echo '<div class="hero-side">';
         foreach ($sec as $a) {
             $im = img($a['image']);
             echo '<a class="hero-card" href="' . e(url('article', ['id' => $a['id']])) . '">'
                . '<span class="hc-im">' . ($im ? '<img src="' . e($im) . '" alt="" loading="lazy">' : '') . '</span>'
-               . '<span class="hc-bd"><h3>' . e($a['title']) . '</h3><time>' . e(date_i18n($a['published_at'], false)) . '</time></span></a>';
+               . '<span class="hc-bd"><h3>' . e(num_i18n((string)$a['title'])) . '</h3><time>' . e(date_i18n($a['published_at'], false)) . '</time></span></a>';
         }
         echo '</div>';
     }
@@ -316,10 +344,33 @@ case 'home': {
            . '<div class="ngrid">' . implode('', array_map(fn($a) => news_card($a), $latest)) . '</div></section>';
     }
 
+    /* بنادر آزاد ایران — منبع فرینا */
+    $ports = freena_ports(4);
+    if ($ports) {
+        echo '<section class="sec">' . section_head(tl('آخرین اخبار بنادر آزاد ایران', 'Free Ports of Iran — Latest', 'أحدث أخبار الموانئ الحرة في إيران'), 'https://freena.ir')
+           . '<div class="fgrid">';
+        foreach ($ports as $pt) {
+            $u  = $pt['u'] !== '' ? (string)$pt['u'] : 'https://freena.ir';
+            $tt = num_i18n((string)$pt['t']);
+            $xx = num_i18n((string)$pt['x']);
+            echo '<article class="fcard">'
+               . '<a class="fc-im" href="' . e($u) . '" target="_blank" rel="noopener">'
+               . ($pt['img'] !== '' ? '<img src="' . e((string)$pt['img']) . '" alt="" loading="lazy">' : '<span class="noimg">🚢</span>')
+               . '</a>'
+               . '<div class="fc-bd">'
+               . '<span class="fc-src">' . e(tl('منبع: فرینا', 'Source: Freena', 'المصدر: فرينا')) . '</span>'
+               . '<h3><a href="' . e($u) . '" target="_blank" rel="noopener">' . e($tt) . '</a></h3>'
+               . '<p>' . e($xx) . '</p>'
+               . (!empty($pt['dt']) ? '<time>' . e(date_i18n((string)$pt['dt'], false)) . '</time>' : '')
+               . '</div></article>';
+        }
+        echo '</div></section>';
+    }
+
     /* اطلاعیه‌ها */
     $anns = x_list('announcements', 'announcement_translations', 'announcement_id', 'published_at DESC', true, ['title', 'body'], limit: 4);
     if ($anns) {
-        echo '<section class="sec">' . section_head(t('announcements'), url('announcements')) . '<div class="alist">';
+        echo '<section class="sec sec-band">' . section_head(t('announcements'), url('announcements')) . '<div class="alist">';
         foreach ($anns as $a) echo ann_card($a);
         echo '</div></section>';
     }
@@ -327,7 +378,7 @@ case 'home': {
     /* رویدادها */
     $evs = x_list('events', 'event_translations', 'event_id', 'event_date ASC', true, ['title', 'description', 'location', 'category'], where: ['x.event_date >= CURDATE()'], limit: 4);
     if ($evs) {
-        echo '<section class="sec">' . section_head(t('events'), url('events')) . '<div class="egrid">';
+        echo '<section class="sec sec-band sec-ev">' . section_head(t('events'), url('events')) . '<div class="egrid">';
         foreach ($evs as $ev) echo event_card($ev);
         echo '</div></section>';
     }
@@ -363,14 +414,14 @@ case 'article': {
     echo '<nav class="crumbs"><a href="' . e(url('home')) . '">' . e(t('home')) . '</a> › <a href="' . e(url('news')) . '">' . e(t('news')) . '</a>' .
          ($catName ? ' › <a href="' . e(url('news', ['cat' => (int)$a['category_id']])) . '">' . e($catName) . '</a>' : '') . '</nav>
     <article class="art">
-      <h1 class="art-t">' . e($a['title']) . '</h1>
+      <h1 class="art-t">' . e(num_i18n((string)$a['title'])) . '</h1>
       <div class="art-meta">
         <time>🗓 ' . e(date_i18n($a['published_at'])) . '</time>
         <span>👁 ' . e(num_i18n((int)$a['views'] + 1)) . ' ' . e(t('views')) . '</span>' .
         ($a['source_url'] ? '<a class="src" href="' . e($a['source_url']) . '" target="_blank" rel="noopener">' . e(t('source')) . ': ' . e($a['source_name'] ?: (string)parse_url((string)$a['source_url'], PHP_URL_HOST)) . ' ↗</a>' : '') . '
       </div>' .
       ($im ? '<figure class="art-im"><img src="' . e($im) . '" alt="' . e($a['title']) . '"></figure>' : '') .
-      ($a['excerpt'] ? '<p class="art-lead">' . e($a['excerpt']) . '</p>' : '') .
+      ($a['excerpt'] ? '<p class="art-lead">' . e(num_i18n((string)$a['excerpt'])) . '</p>' : '') .
       ($lang !== 'fa' && !q1("SELECT id FROM article_translations WHERE article_id = ? AND lang = ? AND body IS NOT NULL", [$id, $lang])
           ? '<p class="tr-note">ℹ️ ' . e(tl('ترجمه کامل متن این خبر به این زبان در دست تهیه است؛ متن کامل به فارسی نشان داده می‌شود.',
                                           'Full translation of this article is in progress; the original Persian text is shown below.',
@@ -530,7 +581,7 @@ case 'contact': {
     <p class="intro-p">' . e(t('contact_intro')) . '</p>
     <div class="cgrid">
       <div class="ccard"><h3>' . e(t('address_lbl')) . '</h3><p>' . e(setting('address', '')) . '</p></div>
-      <div class="ccard"><h3>' . e(t('phone_lbl')) . '</h3><p dir="ltr">' . e(setting('phone', '')) . '</p></div>
+      <div class="ccard"><h3>' . e(t('phone_lbl')) . '</h3><p dir="ltr">' . e(num_i18n((string)setting('phone', ''))) . '</p></div>
       <div class="ccard"><h3>' . e(t('email_lbl')) . '</h3><p dir="ltr">' . e(setting('email', '')) . '</p></div>
       <div class="ccard"><h3>' . e(t('hours_lbl')) . '</h3><p>' . e(t('hours_val')) . '</p></div>
     </div>';

@@ -483,3 +483,89 @@ html{scroll-padding-top:172px}
   .hc-im{height:100%;min-height:0}
   .hero-card .hc-bd{align-self:center}
 }
+
+/* ===== v16: بنادر آزاد ایران (فرینا) + گرافیک حرفه‌ای اطلاعیه‌ها/رویدادها ===== */
+/* --- بخش بنادر آزاد --- */
+.fgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.fcard{display:flex;flex-direction:column;background:#fff;border:1px solid var(--hairline);border-radius:16px;overflow:hidden;box-shadow:0 1px 4px rgba(15,40,70,.06);transition:transform .18s ease,box-shadow .18s ease;text-align:center}
+.fcard:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(15,40,70,.13);border-color:var(--line-strong)}
+.fc-im{display:flex;align-items:center;justify-content:center;aspect-ratio:16/9;overflow:hidden;background:var(--veil)}
+.fc-im img{width:100%;height:100%;object-fit:cover;display:block}
+.fc-bd{display:flex;flex-direction:column;align-items:center;gap:7px;padding:13px 15px 15px;flex:1}
+.fc-src{font-size:10.5px;font-weight:700;color:var(--blue);background:var(--accent-soft);border:1px solid var(--hairline);border-radius:999px;padding:2px 11px}
+.fc-bd h3{margin:0;font-size:14px;font-weight:800;line-height:1.75;color:var(--ink)}
+.fc-bd h3 a{color:inherit;text-decoration:none}
+.fc-bd h3 a:hover{color:var(--orange)}
+.fc-bd p{margin:0;font-size:12.5px;color:var(--muted);line-height:1.9;text-align:justify}
+.fc-bd time{margin-top:auto;font-size:11px;color:var(--slate)}
+.fcard .noimg{font-size:30px;opacity:.55}
+@media (max-width:1020px){.fgrid{grid-template-columns:1fr 1fr}}
+@media (max-width:640px){.fgrid{grid-template-columns:1fr}}
+
+/* --- اطلاعیه‌ها: شبکه ۲ستون + نوار رنگی نوع + آیکون رنگی --- */
+.alist{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.acard{position:relative;overflow:hidden;background:#fff;border-radius:var(--radius)}
+.acard::before{content:'';position:absolute;inset-inline-start:0;top:0;bottom:0;width:4px;opacity:.92}
+.acard.a-tender::before{background:#2f6fd6}
+.acard.a-auction::before{background:#b04343}
+.acard.a-notice::before{background:#1d8a5f}
+.acard.a-call::before{background:#e08a1e}
+.acard:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(15,40,70,.10)}
+.acard-ic{width:46px;height:46px;border-radius:50%;font-size:21px;background:var(--accent-soft);border:2px solid var(--hairline)}
+.a-tender .acard-ic{background:#e9f2ff;color:#2f6fd6;border-color:#d4e2f8}
+.a-auction .acard-ic{background:#fdeeee;color:#b04343;border-color:#f3d7d7}
+.a-notice .acard-ic{background:#eaf6f0;color:#1d8a5f;border-color:#d2e8db}
+.a-call .acard-ic{background:#fdf2df;color:#c07d1a;border-color:#f2e0c0}
+.acard h3{font-size:15px}
+.acard p{font-size:13px;text-align:justify}
+.acard-meta{margin-top:auto;border-top:1px dashed var(--hairline);padding-top:10px}
+@media (max-width:760px){.alist{grid-template-columns:1fr}}
+
+/* --- رویدادها: بج تاریخ گرادیانی + حالت «نزدیک» --- */
+.ecard{position:relative;overflow:hidden;background:#fff;border-radius:var(--radius)}
+.ecard::after{content:'';position:absolute;inset-block:0;inset-inline-end:0;width:5px;background:linear-gradient(180deg,#ffa94d,#ef6416);opacity:.9}
+.ecard:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(15,40,70,.10)}
+.edate{background:linear-gradient(145deg,#ffa94d 0%,#ef6416 100%);border:none;color:#fff;border-radius:14px;min-width:64px;height:68px;box-shadow:0 6px 16px rgba(239,100,22,.30)}
+.edate b{font-size:23px;color:#fff}
+.edate span{color:rgba(255,255,255,.94);font-weight:700}
+.ecard.e-soon::after{background:linear-gradient(180deg,#ff8080,#c81e1e)}
+.e-soon .edate{background:linear-gradient(145deg,#ff8080 0%,#c81e1e 100%);box-shadow:0 6px 16px rgba(200,30,30,.30)}
+.echip.edays{background:#fff3e6;border-color:#ffd9b3;color:#c2410c;font-weight:800}
+.e-soon .echip.edays{background:#fdecec;border-color:#f5c2c2;color:#b91c1c}
+
+/* ===== v17: تصویر + بک‌گراند حرفه‌ای اطلاعیه‌ها/رویدادها ===== */
+/* بند پس‌زمینه دو بخش در خانه */
+.sec-band{background:radial-gradient(circle at 1px 1px,rgba(47,111,214,.05) 1px,transparent 0) 0 0/17px 17px,linear-gradient(180deg,#f6f9fd 0%,#eef3fa 100%);border-block:1px solid var(--hairline-soft)}
+.sec-ev{background:radial-gradient(circle at 1px 1px,rgba(239,100,22,.07) 1px,transparent 0) 0 0/17px 17px,linear-gradient(180deg,#fdf6ef 0%,#f8eee3 100%)}
+
+/* --- اطلاعیه‌ها: کارت تصویری --- */
+.alist{gap:18px}
+.acard{flex-direction:column;align-items:stretch;gap:0;padding:0;background:#fff}
+.acard::before{inset-inline:0;inset-block-end:auto;top:0;height:4px;width:100%;border-radius:0;}
+.acard-bd{flex:1;display:flex;flex-direction:column;padding:18px}
+.a-im{position:relative;height:150px;flex-shrink:0;overflow:hidden;background:var(--veil)}
+.a-im img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
+.acard:hover .a-im img{transform:scale(1.05)}
+.a-im::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,rgba(10,32,62,.26),rgba(10,32,62,0) 60%)}
+.a-ic{position:absolute;inset-block-end:-23px;inset-inline-start:16px;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:21px;background:#fff;border:2px solid var(--hairline);box-shadow:0 5px 12px rgba(15,40,70,.14);z-index:2}
+/* بدون تصویر: هدر گرادیانِ تایپ با پترن نقطه‌ای */
+.a-im-typo{height:78px;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 1px 1px,rgba(255,255,255,.28) 1px,transparent 0) 0 0/12px 12px,linear-gradient(120deg,var(--tc1),var(--tc2))}
+.a-tender .a-im-typo{--tc1:#4d8bde;--tc2:#2f6fd6}
+.a-auction .a-im-typo{--tc1:#c45959;--tc2:#b04343}
+.a-notice .a-im-typo{--tc1:#2aa173;--tc2:#1d8a5f}
+.a-call .a-im-typo{--tc1:#eba03a;--tc2:#e08a1e}
+.a-im-typo .a-ic{position:static;width:54px;height:54px;background:rgba(255,255,255,.94);border:2px solid rgba(255,255,255,.55);box-shadow:0 6px 16px rgba(10,32,62,.20)}
+.a-im-typo + .acard-bd{padding-top:24px}
+
+/* --- رویدادها: کارت تصویری + پس‌زمینه گرم --- */
+.ecard{gap:0}
+.ecard:not(.has-im){background:radial-gradient(circle at 1px 1px,rgba(239,100,22,.07) 1px,transparent 0) 0 0/13px 13px,linear-gradient(160deg,#fffdfa,#fff4ea)}
+.ecard .ebd{flex:1;display:flex;flex-direction:column}
+.ecard .emeta{margin-top:auto}
+.ecard.has-im{flex-direction:column;padding:0}
+.e-im{position:relative;height:150px;flex-shrink:0;overflow:hidden;background:var(--veil)}
+.e-im img{width:100%;height:100%;object-fit:cover;transition:transform .35s ease}
+.ecard:hover .e-im img{transform:scale(1.05)}
+.e-im::after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,rgba(90,40,5,.28),rgba(90,40,5,0) 60%)}
+.ecard.has-im .edate{position:absolute;top:10px;inset-inline-start:12px;min-width:54px;height:56px;z-index:2}
+.ecard.has-im::after{display:none}
